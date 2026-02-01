@@ -1,5 +1,10 @@
 import React from "react";
-import { ActivityIndicator, Pressable, Text } from "react-native";
+import {
+  ActivityIndicator,
+  Pressable,
+  Text,
+  type PressableStateCallbackType,
+} from "react-native";
 import { tailwind } from "../../theme/tailwind";
 import {
   buttonBaseClass,
@@ -27,13 +32,13 @@ export function Button({
   } ${isDisabled ? "opacity-50" : ""}`;
   const textClass = `font-sans text-body-md font-semibold ${buttonTextClassMap[variant]}`;
   const spinnerColor = variant === "primary" ? primarySpinnerColor : secondarySpinnerColor;
+  const resolveStyle = (state: PressableStateCallbackType) => {
+    const resolvedStyle = typeof style === "function" ? style(state) : style;
+    return [tailwind(containerClass), resolvedStyle];
+  };
 
   return (
-    <Pressable
-      style={[tailwind(containerClass), style]}
-      disabled={isDisabled}
-      {...props}
-    >
+    <Pressable style={resolveStyle} disabled={isDisabled} {...props}>
       {loading ? (
         <ActivityIndicator color={spinnerColor} />
       ) : (
