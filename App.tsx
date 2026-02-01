@@ -5,12 +5,13 @@
  * @format
  */
 
-import { StatusBar, Text, View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import {
   SafeAreaProvider,
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import { Button, Card, Typography } from './src/components';
 import { tailwind } from './src/theme/tailwind';
 
 function App() {
@@ -26,39 +27,60 @@ function AppContent() {
   const safeAreaInsets = useSafeAreaInsets();
 
   return (
-    <SafeAreaView style={tailwind('flex-1 bg-bg-screen')} edges={['top', 'bottom']}>
-      <View style={[tailwind('flex-1 bg-bg-screen px-16 pb-24'), { paddingTop: safeAreaInsets.top }]}>
-        <Text style={tailwind('font-sans text-text-primary text-title-lg font-bold mt-16')}>
-          FitCoach Tokens
-        </Text>
-        <Text style={tailwind('font-sans text-text-secondary text-body-md mt-8 mb-24')}>
+    <SafeAreaView
+      style={tailwind('flex-1 bg-bg-screen')}
+      edges={['top', 'bottom']}
+    >
+      <View
+        style={[
+          tailwind('flex-1 bg-bg-screen px-16 pb-24'),
+          { paddingTop: safeAreaInsets.top },
+        ]}
+      >
+        <Typography variant="titleLg">FitCoach Tokens</Typography>
+        <Typography
+          variant="bodyMd"
+          tone="secondary"
+          style={tailwind('mt-8 mb-24')}
+        >
           Design tokens baseline preview
-        </Text>
+        </Typography>
 
-        <View style={tailwind('bg-bg-card border border-border rounded-md p-16 shadow-sm')}>
-          <Text style={tailwind('font-sans text-text-primary text-title-md font-semibold mb-8')}>
+        <Card style={tailwind('shadow-sm')}>
+          <Typography variant="titleMd" style={tailwind('mb-8')}>
             Recommendation
-          </Text>
-          <Text style={tailwind('font-sans text-text-secondary text-body-md mb-16')}>
+          </Typography>
+          <Typography
+            variant="bodyMd"
+            tone="secondary"
+            style={tailwind('mb-16')}
+          >
             오늘은 하체 루틴이 적합해요. 최근 2일간 상체 비중이 높았습니다.
-          </Text>
-          <View style={tailwind('bg-primary-500 py-12 rounded-md items-center')}>
-            <Text style={tailwind('font-sans text-bg-card text-body-md font-semibold')}>
-              Start Workout
-            </Text>
-          </View>
-        </View>
+          </Typography>
+          <Button title="Start Workout" />
+        </Card>
 
-        <View style={tailwind('flex-row mt-20')} >
-          <View style={tailwind('bg-primary-100 border border-primary-500 rounded-full px-12 py-6 mr-8')}>
-            <Text style={tailwind('font-sans text-primary-500 text-body-sm font-semibold')}>
+        <View style={tailwind('flex-row mt-20')}>
+          <View
+            style={tailwind(
+              'bg-primary-100 border border-primary-500 rounded-full px-12 py-6 mr-8',
+            )}
+          >
+            <Typography
+              variant="bodySm"
+              style={tailwind('text-primary-500 font-semibold')}
+            >
               Selected
-            </Text>
+            </Typography>
           </View>
-          <View style={tailwind('bg-bg-card border border-border rounded-full px-12 py-6')}>
-            <Text style={tailwind('font-sans text-text-secondary text-body-sm')}>
+          <View
+            style={tailwind(
+              'bg-bg-card border border-border rounded-full px-12 py-6',
+            )}
+          >
+            <Typography variant="bodySm" tone="secondary">
               Default
-            </Text>
+            </Typography>
           </View>
         </View>
       </View>
