@@ -1,0 +1,10 @@
+import type { TextInputProps } from "react-native";
+
+export const INPUT_VARIANTS = ["default", "error"] as const;
+export type InputVariant = (typeof INPUT_VARIANTS)[number];
+
+export type InputProps = TextInputProps & {
+  label?: string;
+  helperText?: string;
+  variant?: InputVariant;
+};
