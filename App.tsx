@@ -11,7 +11,7 @@ import {
   SafeAreaView,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
-import { Button, Card, Typography } from './src/components';
+import { Button, Card, Chip, Input, ListItem, Typography } from './src/components';
 import { tailwind } from './src/theme/tailwind';
 
 function App() {
@@ -61,27 +61,23 @@ function AppContent() {
         </Card>
 
         <View style={tailwind('flex-row mt-20')}>
-          <View
-            style={tailwind(
-              'bg-primary-100 border border-primary-500 rounded-full px-12 py-6 mr-8',
-            )}
-          >
-            <Typography
-              variant="bodySm"
-              style={tailwind('text-primary-500 font-semibold')}
-            >
-              Selected
-            </Typography>
-          </View>
-          <View
-            style={tailwind(
-              'bg-bg-card border border-border rounded-full px-12 py-6',
-            )}
-          >
-            <Typography variant="bodySm" tone="secondary">
-              Default
-            </Typography>
-          </View>
+          <Chip label="Selected" variant="selected" style={tailwind('mr-8')} />
+          <Chip label="Default" />
+        </View>
+
+        <View style={tailwind('mt-20')}>
+          <Input label="Weight" placeholder="Enter kg" keyboardType="numeric" />
+        </View>
+
+        <View style={tailwind('mt-20 rounded-md overflow-hidden border border-border')}>
+          <ListItem
+            title="Workout History"
+            description="Last session: Upper Body"
+          />
+          <ListItem
+            title="View Stats"
+            description="Weekly volume overview"
+          />
         </View>
       </View>
     </SafeAreaView>
