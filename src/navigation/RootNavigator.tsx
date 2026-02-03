@@ -2,7 +2,7 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CoachScreen, HistoryScreen, HomeScreen, ProfileScreen } from "../screens";
+import { CoachScreen, HistoryScreen, HomeScreen, ProfileScreen } from "@src/screens";
 import { getTabBarStyle, tabBarLabelStyle } from "./styles";
 
 export type RootTabParamList = {

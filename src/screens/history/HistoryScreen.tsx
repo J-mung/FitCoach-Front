@@ -1,6 +1,6 @@
 import React from "react";
-import { LayoutShell } from "../../layout";
-import { Typography } from "../../components";
+import { LayoutShell } from "@src/layout";
+import { Typography } from "@src/components";
 
 export function HistoryScreen() {
   return (

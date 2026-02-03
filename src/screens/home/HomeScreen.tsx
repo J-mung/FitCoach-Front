@@ -1,8 +1,8 @@
 import React from "react";
 import { View } from "react-native";
-import { LayoutShell } from "../../layout";
-import { Card, Typography } from "../../components";
-import { tailwind } from "../../theme/tailwind";
+import { LayoutShell } from "@src/layout";
+import { Card, Typography } from "@src/components";
+import { tailwind } from "@src/theme/tailwind";
 import {
   homeCardShadowClass,
   homeCardTitleClass,
