@@ -1,15 +1,25 @@
 import type { TypographyTone, TypographyVariant } from "./type";
+import {
+  typographyBodyMdClass,
+  typographyBodySmClass,
+  typographyCaptionClass,
+  typographyTitleLgClass,
+  typographyTitleMdClass,
+  typographyToneDisabledClass,
+  typographyTonePrimaryClass,
+  typographyToneSecondaryClass,
+} from "./styles";
 
 export const typographyVariantClassMap: Record<TypographyVariant, string> = {
-  titleLg: "text-title-lg font-bold",
-  titleMd: "text-title-md font-semibold",
-  bodyMd: "text-body-md",
-  bodySm: "text-body-sm",
-  caption: "text-caption",
+  titleLg: typographyTitleLgClass,
+  titleMd: typographyTitleMdClass,
+  bodyMd: typographyBodyMdClass,
+  bodySm: typographyBodySmClass,
+  caption: typographyCaptionClass,
 };
 
 export const typographyToneClassMap: Record<TypographyTone, string> = {
-  primary: "text-text-primary",
-  secondary: "text-text-secondary",
-  disabled: "text-text-disabled",
+  primary: typographyTonePrimaryClass,
+  secondary: typographyToneSecondaryClass,
+  disabled: typographyToneDisabledClass,
 };

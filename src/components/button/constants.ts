@@ -1,20 +1,31 @@
 import type { ButtonSize, ButtonVariant } from "./type";
+import {
+  buttonContainerBaseClass,
+  buttonGhostClass,
+  buttonGhostTextClass,
+  buttonPrimaryClass,
+  buttonPrimaryTextClass,
+  buttonSecondaryClass,
+  buttonSecondaryTextClass,
+  buttonSizeLgClass,
+  buttonSizeMdClass,
+} from "./styles";
 
-export const buttonBaseClass = "items-center justify-center rounded-md";
+export const buttonBaseClass = buttonContainerBaseClass;
 
 export const buttonSizeClassMap: Record<ButtonSize, string> = {
-  md: "py-12",
-  lg: "py-16",
+  md: buttonSizeMdClass,
+  lg: buttonSizeLgClass,
 };
 
 export const buttonVariantClassMap: Record<ButtonVariant, string> = {
-  primary: "bg-primary-500",
-  secondary: "bg-bg-card border border-border",
-  ghost: "bg-transparent",
+  primary: buttonPrimaryClass,
+  secondary: buttonSecondaryClass,
+  ghost: buttonGhostClass,
 };
 
 export const buttonTextClassMap: Record<ButtonVariant, string> = {
-  primary: "text-bg-card",
-  secondary: "text-primary-500",
-  ghost: "text-primary-500",
+  primary: buttonPrimaryTextClass,
+  secondary: buttonSecondaryTextClass,
+  ghost: buttonGhostTextClass,
 };

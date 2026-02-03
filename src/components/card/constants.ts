@@ -1,8 +1,13 @@
 import type { CardVariant } from "./type";
+import {
+  cardContainerClass,
+  cardDefaultClass,
+  cardRecommendationClass,
+} from "./styles";
 
 export const cardVariantClassMap: Record<CardVariant, string> = {
-  default: "bg-bg-card border border-border",
-  recommendation: "bg-primary-100",
+  default: cardDefaultClass,
+  recommendation: cardRecommendationClass,
 };
 
-export const cardBaseClass = "rounded-md p-16";
+export const cardBaseClass = cardContainerClass;

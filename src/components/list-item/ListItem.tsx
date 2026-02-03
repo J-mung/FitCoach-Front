@@ -11,6 +11,10 @@ import {
   listItemDescriptionClass,
   listItemTitleClass,
 } from "./constants";
+import {
+  listItemContentClass,
+  listItemRightSpacingClass,
+} from "./styles";
 import type { ListItemProps } from "./type";
 
 export function ListItem({
@@ -28,13 +32,15 @@ export function ListItem({
 
   return (
     <Pressable style={resolveStyle} {...props}>
-      <View style={tailwind("flex-1")}> 
+      <View style={tailwind(listItemContentClass)}> 
         <Text style={tailwind(listItemTitleClass)}>{title}</Text>
         {description ? (
           <Text style={tailwind(listItemDescriptionClass)}>{description}</Text>
         ) : null}
       </View>
-      {rightElement ? <View style={tailwind("ml-12")}>{rightElement}</View> : null}
+      {rightElement ? (
+        <View style={tailwind(listItemRightSpacingClass)}>{rightElement}</View>
+      ) : null}
     </Pressable>
   );
 }

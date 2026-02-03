@@ -1,0 +1,10 @@
+export const buttonContainerBaseClass = "items-center justify-center rounded-md";
+export const buttonSizeMdClass = "py-12";
+export const buttonSizeLgClass = "py-16";
+export const buttonPrimaryClass = "bg-primary-500";
+export const buttonSecondaryClass = "bg-bg-card border border-border";
+export const buttonGhostClass = "bg-transparent";
+export const buttonPrimaryTextClass = "text-bg-card";
+export const buttonSecondaryTextClass = "text-primary-500";
+export const buttonGhostTextClass = "text-primary-500";
+export const buttonDisabledClass = "opacity-50";

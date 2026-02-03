@@ -1,13 +1,20 @@
 import type { ChipVariant } from "./type";
+import {
+  chipContainerClass,
+  chipDefaultClass,
+  chipDefaultTextClass,
+  chipSelectedClass,
+  chipSelectedTextClass,
+} from "./styles";
 
-export const chipBaseClass = "rounded-full px-12 py-6";
+export const chipBaseClass = chipContainerClass;
 
 export const chipVariantClassMap: Record<ChipVariant, string> = {
-  default: "bg-bg-card border border-border",
-  selected: "bg-primary-100 border border-primary-500",
+  default: chipDefaultClass,
+  selected: chipSelectedClass,
 };
 
 export const chipTextClassMap: Record<ChipVariant, string> = {
-  default: "text-text-secondary",
-  selected: "text-primary-500 font-semibold",
+  default: chipDefaultTextClass,
+  selected: chipSelectedTextClass,
 };

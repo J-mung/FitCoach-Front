@@ -13,6 +13,7 @@ import {
   buttonVariantClassMap,
 } from "./constants";
 import type { ButtonProps } from "./type";
+import { buttonDisabledClass } from "./styles";
 
 const primarySpinnerColor = "#FFFFFF";
 const secondarySpinnerColor = "#4C8DFF";
@@ -29,7 +30,7 @@ export function Button({
   const isDisabled = disabled || loading;
   const containerClass = `${buttonBaseClass} ${buttonSizeClassMap[size]} ${
     buttonVariantClassMap[variant]
-  } ${isDisabled ? "opacity-50" : ""}`;
+  } ${isDisabled ? buttonDisabledClass : ""}`;
   const textClass = `font-sans text-body-md font-semibold ${buttonTextClassMap[variant]}`;
   const spinnerColor = variant === "primary" ? primarySpinnerColor : secondarySpinnerColor;
   const resolveStyle = (state: PressableStateCallbackType) => {

@@ -3,6 +3,7 @@ import { Text } from "react-native";
 import { tailwind } from "../../theme/tailwind";
 import { typographyToneClassMap, typographyVariantClassMap } from "./constants";
 import type { TypographyProps } from "./type";
+import { typographyBaseClass } from "./styles";
 
 export function Typography({
   variant = "bodyMd",
@@ -11,7 +12,7 @@ export function Typography({
   children,
   ...props
 }: TypographyProps) {
-  const baseClass = `font-sans ${typographyVariantClassMap[variant]} ${
+  const baseClass = `${typographyBaseClass} ${typographyVariantClassMap[variant]} ${
     typographyToneClassMap[tone]
   }`;
 
