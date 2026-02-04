@@ -1,10 +1,25 @@
-export const buttonContainerBaseClass = "items-center justify-center rounded-md";
-export const buttonSizeMdClass = "py-12";
-export const buttonSizeLgClass = "py-16";
-export const buttonPrimaryClass = "bg-primary-500";
-export const buttonSecondaryClass = "bg-bg-card border border-border";
-export const buttonGhostClass = "bg-transparent";
-export const buttonPrimaryTextClass = "text-bg-card";
-export const buttonSecondaryTextClass = "text-primary-500";
-export const buttonGhostTextClass = "text-primary-500";
-export const buttonDisabledClass = "opacity-50";
+import { tailwind } from "@src/theme/tailwind";
+import { tokens } from "@src/styles";
+
+// 버튼 스타일: 공통/사이즈/톤을 분리한다.
+export const styles = {
+  base: tailwind(`${tokens.layout.center} ${tokens.radius.md}`),
+  sizes: {
+    md: tailwind(tokens.spacing.buttonPaddingMd),
+    lg: tailwind(tokens.spacing.buttonPaddingLg),
+  },
+  variants: {
+    primary: tailwind(tokens.color.primary),
+    secondary: tailwind(`${tokens.color.card} ${tokens.border.base} ${tokens.color.border}`),
+    ghost: tailwind(tokens.color.transparent),
+  },
+  textBase: tailwind(
+    `${tokens.typography.fontBase} ${tokens.typography.bodyMd} ${tokens.typography.weightSemibold}`
+  ),
+  text: {
+    primary: tailwind(tokens.color.textOnPrimary),
+    secondary: tailwind(tokens.color.textBrand),
+    ghost: tailwind(tokens.color.textBrand),
+  },
+  disabled: tailwind(tokens.opacity.disabled),
+};

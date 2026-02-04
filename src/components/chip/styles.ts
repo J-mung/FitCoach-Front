@@ -1,5 +1,18 @@
-export const chipContainerClass = "rounded-full px-12 py-6";
-export const chipDefaultClass = "bg-bg-card border border-border";
-export const chipSelectedClass = "bg-primary-100 border border-primary-500";
-export const chipDefaultTextClass = "text-text-secondary";
-export const chipSelectedTextClass = "text-primary-500 font-semibold";
+import { tailwind } from "@src/theme/tailwind";
+import { tokens } from "@src/styles";
+
+// 칩 스타일: 선택 상태에 따른 배경/텍스트를 분리한다.
+export const styles = {
+  base: tailwind(
+    `${tokens.radius.full} ${tokens.spacing.chipPaddingX} ${tokens.spacing.chipPaddingY}`
+  ),
+  variants: {
+    default: tailwind(`${tokens.color.card} ${tokens.border.base} ${tokens.color.border}`),
+    selected: tailwind(`${tokens.color.primarySoft} ${tokens.border.base} ${tokens.color.borderPrimary}`),
+  },
+  textBase: tailwind(`${tokens.typography.fontBase} ${tokens.typography.bodySm}`),
+  text: {
+    default: tailwind(tokens.color.textSecondary),
+    selected: tailwind(`${tokens.color.textBrand} ${tokens.typography.weightSemibold}`),
+  },
+};

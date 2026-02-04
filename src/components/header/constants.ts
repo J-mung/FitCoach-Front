@@ -1,5 +1,11 @@
-export const headerBaseClass =
-  "flex-row items-center justify-between bg-bg-card border-b border-border px-16";
+import { tailwind } from "@src/theme/tailwind";
+import { tokens } from "@src/styles";
 
-export const headerTitleClass = "font-sans text-title-md text-text-primary";
+// 헤더 기본 레이아웃/타이포 스타일.
+export const headerBaseStyle = tailwind(
+  `${tokens.layout.rowBetween} ${tokens.color.card} ${tokens.border.bottom} ${tokens.color.border} ${tokens.spacing.contentX}`
+);
+export const headerTitleStyle = tailwind(
+  `${tokens.typography.fontBase} ${tokens.typography.titleMd} ${tokens.color.textPrimary}`
+);
 export const headerHeight = 44;

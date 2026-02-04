@@ -1,6 +1,24 @@
-export const inputContainerClass = "bg-bg-card border rounded-md px-12 py-10 text-body-md";
-export const inputDefaultBorderClass = "border-border";
-export const inputErrorBorderClass = "border-primary-500";
-export const inputLabelClass = "font-sans text-body-sm text-text-secondary mb-6";
-export const inputHelperClass = "font-sans text-caption text-text-secondary mt-6";
-export const inputErrorHelperClass = "font-sans text-caption text-primary-500 mt-6";
+import { tailwind } from "@src/theme/tailwind";
+import { tokens } from "@src/styles";
+
+// 인풋 스타일: 기본/에러 상태와 라벨/헬퍼 텍스트를 분리한다.
+export const styles = {
+  containerBase: tailwind(
+    `${tokens.color.card} ${tokens.border.base} ${tokens.radius.md} ${tokens.spacing.inputPaddingX} ${tokens.spacing.inputPaddingY} ${tokens.typography.bodyMd}`
+  ),
+  border: {
+    default: tailwind(tokens.color.border),
+    error: tailwind(tokens.color.borderPrimary),
+  },
+  label: tailwind(
+    `${tokens.typography.fontBase} ${tokens.typography.bodySm} ${tokens.color.textSecondary} ${tokens.spacing.inputLabelBottom}`
+  ),
+  helper: {
+    default: tailwind(
+      `${tokens.typography.fontBase} ${tokens.typography.caption} ${tokens.color.textSecondary} ${tokens.spacing.inputHelperTop}`
+    ),
+    error: tailwind(
+      `${tokens.typography.fontBase} ${tokens.typography.caption} ${tokens.color.textBrand} ${tokens.spacing.inputHelperTop}`
+    ),
+  },
+};

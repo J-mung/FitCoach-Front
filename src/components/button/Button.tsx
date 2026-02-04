@@ -5,15 +5,14 @@ import {
   Text,
   type PressableStateCallbackType,
 } from "react-native";
-import { tailwind } from "../../theme/tailwind";
 import {
-  buttonBaseClass,
-  buttonSizeClassMap,
-  buttonTextClassMap,
-  buttonVariantClassMap,
+  buttonBaseStyle,
+  buttonSizeStyleMap,
+  buttonTextStyleMap,
+  buttonVariantStyleMap,
 } from "./constants";
 import type { ButtonProps } from "./type";
-import { buttonDisabledClass } from "./styles";
+import { styles } from "./styles";
 
 const primarySpinnerColor = "#FFFFFF";
 const secondarySpinnerColor = "#4C8DFF";
@@ -27,15 +26,19 @@ export function Button({
   style,
   ...props
 }: ButtonProps) {
+  // 로딩 중에는 비활성으로 처리하고 스피너를 표시한다.
   const isDisabled = disabled || loading;
-  const containerClass = `${buttonBaseClass} ${buttonSizeClassMap[size]} ${
-    buttonVariantClassMap[variant]
-  } ${isDisabled ? buttonDisabledClass : ""}`;
-  const textClass = `font-sans text-body-md font-semibold ${buttonTextClassMap[variant]}`;
   const spinnerColor = variant === "primary" ? primarySpinnerColor : secondarySpinnerColor;
+  // Pressable 스타일은 상태 기반 style 함수도 지원한다.
   const resolveStyle = (state: PressableStateCallbackType) => {
     const resolvedStyle = typeof style === "function" ? style(state) : style;
-    return [tailwind(containerClass), resolvedStyle];
+    return [
+      buttonBaseStyle,
+      buttonSizeStyleMap[size],
+      buttonVariantStyleMap[variant],
+      isDisabled ? styles.disabled : null,
+      resolvedStyle,
+    ];
   };
 
   return (
@@ -43,7 +46,8 @@ export function Button({
       {loading ? (
         <ActivityIndicator color={spinnerColor} />
       ) : (
-        <Text style={tailwind(textClass)}>{title}</Text>
+        // 텍스트는 기본 타이포 스타일 + variant 컬러를 적용한다.
+        <Text style={[styles.textBase, styles.text[variant]]}>{title}</Text>
       )}
     </Pressable>
   );

@@ -1,31 +1,23 @@
+import type { ViewStyle, TextStyle } from "react-native";
 import type { ButtonSize, ButtonVariant } from "./type";
-import {
-  buttonContainerBaseClass,
-  buttonGhostClass,
-  buttonGhostTextClass,
-  buttonPrimaryClass,
-  buttonPrimaryTextClass,
-  buttonSecondaryClass,
-  buttonSecondaryTextClass,
-  buttonSizeLgClass,
-  buttonSizeMdClass,
-} from "./styles";
+import { styles } from "./styles";
 
-export const buttonBaseClass = buttonContainerBaseClass;
+// 버튼 스타일 매핑: size/variant별 스타일 객체를 제공한다.
+export const buttonBaseStyle = styles.base;
 
-export const buttonSizeClassMap: Record<ButtonSize, string> = {
-  md: buttonSizeMdClass,
-  lg: buttonSizeLgClass,
+export const buttonSizeStyleMap: Record<ButtonSize, ViewStyle> = {
+  md: styles.sizes.md,
+  lg: styles.sizes.lg,
 };
 
-export const buttonVariantClassMap: Record<ButtonVariant, string> = {
-  primary: buttonPrimaryClass,
-  secondary: buttonSecondaryClass,
-  ghost: buttonGhostClass,
+export const buttonVariantStyleMap: Record<ButtonVariant, ViewStyle> = {
+  primary: styles.variants.primary,
+  secondary: styles.variants.secondary,
+  ghost: styles.variants.ghost,
 };
 
-export const buttonTextClassMap: Record<ButtonVariant, string> = {
-  primary: buttonPrimaryTextClass,
-  secondary: buttonSecondaryTextClass,
-  ghost: buttonGhostTextClass,
+export const buttonTextStyleMap: Record<ButtonVariant, TextStyle> = {
+  primary: styles.text.primary,
+  secondary: styles.text.secondary,
+  ghost: styles.text.ghost,
 };

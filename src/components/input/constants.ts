@@ -1,18 +1,15 @@
+import type { TextStyle, ViewStyle } from "react-native";
 import type { InputVariant } from "./type";
-import {
-  inputContainerClass,
-  inputDefaultBorderClass,
-  inputErrorBorderClass,
-  inputErrorHelperClass,
-  inputHelperClass,
-  inputLabelClass,
-} from "./styles";
+import { styles } from "./styles";
 
-export const inputBaseClass = inputContainerClass;
+// 인풋 variant 매핑: 기본/에러 테두리 스타일을 제공한다.
+export const inputBaseStyle = styles.containerBase;
 
-export const inputVariantClassMap: Record<InputVariant, string> = {
-  default: inputDefaultBorderClass,
-  error: inputErrorBorderClass,
+export const inputVariantStyleMap: Record<InputVariant, ViewStyle> = {
+  default: styles.border.default,
+  error: styles.border.error,
 };
 
-export { inputLabelClass, inputHelperClass, inputErrorHelperClass };
+export const inputLabelStyle: TextStyle = styles.label;
+export const inputHelperStyle: TextStyle = styles.helper.default;
+export const inputErrorHelperStyle: TextStyle = styles.helper.error;

@@ -1,9 +1,8 @@
 import React from "react";
 import { Text } from "react-native";
-import { tailwind } from "../../theme/tailwind";
-import { typographyToneClassMap, typographyVariantClassMap } from "./constants";
+import { typographyToneStyleMap, typographyVariantStyleMap } from "./constants";
 import type { TypographyProps } from "./type";
-import { typographyBaseClass } from "./styles";
+import { styles } from "./styles";
 
 export function Typography({
   variant = "bodyMd",
@@ -12,12 +11,13 @@ export function Typography({
   children,
   ...props
 }: TypographyProps) {
-  const baseClass = `${typographyBaseClass} ${typographyVariantClassMap[variant]} ${
-    typographyToneClassMap[tone]
-  }`;
+  // 기본 폰트 + variant + tone 순서로 합성한다.
+  const variantStyle = typographyVariantStyleMap[variant];
+  const toneStyle = typographyToneStyleMap[tone];
 
   return (
-    <Text style={[tailwind(baseClass), style]} {...props}>
+    // 외부에서 전달된 style은 마지막에 적용한다.
+    <Text style={[styles.base, variantStyle, toneStyle, style]} {...props}>
       {children}
     </Text>
   );

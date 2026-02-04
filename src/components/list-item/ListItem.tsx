@@ -5,16 +5,12 @@ import {
   View,
   type PressableStateCallbackType,
 } from "react-native";
-import { tailwind } from "../../theme/tailwind";
 import {
-  listItemBaseClass,
-  listItemDescriptionClass,
-  listItemTitleClass,
+  listItemBaseStyle,
+  listItemDescriptionStyle,
+  listItemTitleStyle,
 } from "./constants";
-import {
-  listItemContentClass,
-  listItemRightSpacingClass,
-} from "./styles";
+import { styles } from "./styles";
 import type { ListItemProps } from "./type";
 
 export function ListItem({
@@ -25,21 +21,23 @@ export function ListItem({
   style,
   ...props
 }: ListItemProps) {
+  // Pressable은 상태 기반 스타일 함수를 지원한다.
   const resolveStyle = (state: PressableStateCallbackType) => {
     const resolvedStyle = typeof style === "function" ? style(state) : style;
-    return [tailwind(listItemBaseClass), containerStyle, resolvedStyle];
+    return [listItemBaseStyle, containerStyle, resolvedStyle];
   };
 
   return (
     <Pressable style={resolveStyle} {...props}>
-      <View style={tailwind(listItemContentClass)}> 
-        <Text style={tailwind(listItemTitleClass)}>{title}</Text>
+      <View style={styles.content}>
+        <Text style={listItemTitleStyle}>{title}</Text>
         {description ? (
-          <Text style={tailwind(listItemDescriptionClass)}>{description}</Text>
+          <Text style={listItemDescriptionStyle}>{description}</Text>
         ) : null}
       </View>
       {rightElement ? (
-        <View style={tailwind(listItemRightSpacingClass)}>{rightElement}</View>
+        // 우측 부가 요소는 간격을 확보한다.
+        <View style={styles.rightSpacing}>{rightElement}</View>
       ) : null}
     </Pressable>
   );

@@ -4,21 +4,21 @@ import {
   Text,
   type PressableStateCallbackType,
 } from "react-native";
-import { tailwind } from "../../theme/tailwind";
-import { chipBaseClass, chipTextClassMap, chipVariantClassMap } from "./constants";
+import { chipBaseStyle, chipTextStyleMap, chipVariantStyleMap } from "./constants";
+import { styles } from "./styles";
 import type { ChipProps } from "./type";
 
 export function Chip({ label, variant = "default", style, ...props }: ChipProps) {
-  const containerClass = `${chipBaseClass} ${chipVariantClassMap[variant]}`;
-  const textClass = `font-sans text-body-sm ${chipTextClassMap[variant]}`;
+  // Pressable은 상태 기반 스타일 함수를 지원한다.
   const resolveStyle = (state: PressableStateCallbackType) => {
     const resolvedStyle = typeof style === "function" ? style(state) : style;
-    return [tailwind(containerClass), resolvedStyle];
+    return [chipBaseStyle, chipVariantStyleMap[variant], resolvedStyle];
   };
 
   return (
     <Pressable style={resolveStyle} {...props}>
-      <Text style={tailwind(textClass)}>{label}</Text>
+      {/* 기본 텍스트 스타일 + variant 스타일을 합성 */}
+      <Text style={[styles.textBase, chipTextStyleMap[variant]]}>{label}</Text>
     </Pressable>
   );
 }

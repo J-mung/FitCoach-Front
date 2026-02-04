@@ -3,14 +3,7 @@ import { Switch, View } from "react-native";
 import { LayoutShell } from "@src/layout";
 import { Card, Typography } from "@src/components";
 import { useOnboardingStatus } from "@src/hooks";
-import { tailwind } from "@src/theme/tailwind";
-import {
-  homeCardShadowClass,
-  homeCardTitleClass,
-  homeSubtitleClass,
-  homeToggleLabelClass,
-  homeToggleRowClass,
-} from "./styles";
+import { styles } from "./styles";
 
 export function HomeScreen() {
   // 온보딩 완료 상태를 테스트/토글하기 위한 상태.
@@ -22,13 +15,13 @@ export function HomeScreen() {
       <Typography
         variant="bodyMd"
         tone="secondary"
-        style={tailwind(homeSubtitleClass)}
+        style={styles.subtitle}
       >
         Dashboard preview
       </Typography>
 
-      <Card style={tailwind(homeCardShadowClass)}> 
-        <Typography variant="titleMd" style={tailwind(homeCardTitleClass)}> 
+      <Card style={styles.cardShadow}>
+        <Typography variant="titleMd" style={styles.cardTitle}>
           오늘 루틴 추천
         </Typography>
         <Typography variant="bodyMd" tone="secondary"> 
@@ -36,11 +29,12 @@ export function HomeScreen() {
         </Typography>
       </Card>
 
-      <View style={tailwind(homeToggleRowClass)}>
+      {/* 온보딩 완료 상태를 수동으로 토글하기 위한 임시 컨트롤 */}
+      <View style={styles.toggleRow}>
         <Typography
           variant="bodyMd"
           tone="secondary"
-          style={tailwind(homeToggleLabelClass)}
+          style={styles.toggleLabel}
         >
           온보딩 완료 상태
         </Typography>

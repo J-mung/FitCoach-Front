@@ -1,10 +1,19 @@
-export const typographyBaseClass = "font-sans";
-export const typographyTitleLgClass = "text-title-lg font-bold";
-export const typographyTitleMdClass = "text-title-md font-semibold";
-export const typographyBodyMdClass = "text-body-md";
-export const typographyBodySmClass = "text-body-sm";
-export const typographyCaptionClass = "text-caption";
+import { tailwind } from "@src/theme/tailwind";
+import { tokens } from "@src/styles";
 
-export const typographyTonePrimaryClass = "text-text-primary";
-export const typographyToneSecondaryClass = "text-text-secondary";
-export const typographyToneDisabledClass = "text-text-disabled";
+// 타이포그래피 스타일: 폰트/톤 규칙을 분리한다.
+export const styles = {
+  base: tailwind(tokens.typography.fontBase),
+  variants: {
+    titleLg: tailwind(`${tokens.typography.titleLg} ${tokens.typography.weightBold}`),
+    titleMd: tailwind(`${tokens.typography.titleMd} ${tokens.typography.weightSemibold}`),
+    bodyMd: tailwind(tokens.typography.bodyMd),
+    bodySm: tailwind(tokens.typography.bodySm),
+    caption: tailwind(tokens.typography.caption),
+  },
+  tones: {
+    primary: tailwind(tokens.color.textPrimary),
+    secondary: tailwind(tokens.color.textSecondary),
+    disabled: tailwind(tokens.color.textDisabled),
+  },
+};

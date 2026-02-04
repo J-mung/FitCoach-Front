@@ -1,2 +1,8 @@
-export const layoutShellClass = "flex-1 bg-bg-screen";
-export const layoutContentClass = "flex-1 px-16 pt-16";
+import { tailwind } from "@src/theme/tailwind";
+import { tokens } from "@src/styles";
+
+// 레이아웃 기본 스타일: 화면 배경과 내부 패딩.
+export const styles = {
+  shell: tailwind(`${tokens.layout.full} ${tokens.color.screen}`),
+  content: tailwind(`${tokens.layout.full} ${tokens.spacing.contentX} ${tokens.spacing.contentTop}`),
+};

@@ -1,13 +1,11 @@
+import type { ViewStyle } from "react-native";
 import type { CardVariant } from "./type";
-import {
-  cardContainerClass,
-  cardDefaultClass,
-  cardRecommendationClass,
-} from "./styles";
+import { styles } from "./styles";
 
-export const cardVariantClassMap: Record<CardVariant, string> = {
-  default: cardDefaultClass,
-  recommendation: cardRecommendationClass,
+// 카드 variant 매핑: 스타일 객체를 제공한다.
+export const cardVariantStyleMap: Record<CardVariant, ViewStyle> = {
+  default: styles.variants.default,
+  recommendation: styles.variants.recommendation,
 };
 
-export const cardBaseClass = cardContainerClass;
+export const cardBaseStyle = styles.base;

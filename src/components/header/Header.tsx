@@ -1,8 +1,7 @@
 import React from "react";
 import { Text, View } from "react-native";
-import { tailwind } from "../../theme/tailwind";
-import { headerBaseClass, headerHeight, headerTitleClass } from "./constants";
-import { headerLeftSlotClass, headerRightSlotClass } from "./styles";
+import { headerBaseStyle, headerHeight, headerTitleStyle } from "./constants";
+import { styles } from "./styles";
 import type { HeaderProps } from "./type";
 
 export function Header({
@@ -15,12 +14,13 @@ export function Header({
 }: HeaderProps) {
   return (
     <View
-      style={[tailwind(headerBaseClass), { height: headerHeight }, containerStyle, style]}
+      style={[headerBaseStyle, { height: headerHeight }, containerStyle, style]}
       {...props}
     >
-      <View style={tailwind(headerLeftSlotClass)}>{leftElement}</View>
-      <Text style={tailwind(headerTitleClass)}>{title}</Text>
-      <View style={tailwind(headerRightSlotClass)}>{rightElement}</View>
+      {/* 좌/우 슬롯은 고정 폭으로 정렬한다. */}
+      <View style={styles.leftSlot}>{leftElement}</View>
+      <Text style={headerTitleStyle}>{title}</Text>
+      <View style={styles.rightSlot}>{rightElement}</View>
     </View>
   );
 }
