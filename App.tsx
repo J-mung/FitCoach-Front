@@ -7,13 +7,20 @@
 
 import { StatusBar } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { RootNavigator } from '@src/navigation';
+
+// 앱 전역에서 공유하는 QueryClient.
+const queryClient = new QueryClient();
 
 function App() {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle="dark-content" />
-      <RootNavigator />
+      {/* 서버 연동 대비용 React Query Provider */}
+      <QueryClientProvider client={queryClient}>
+        <RootNavigator />
+      </QueryClientProvider>
     </SafeAreaProvider>
   );
 }
