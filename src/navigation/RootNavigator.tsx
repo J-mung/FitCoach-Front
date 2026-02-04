@@ -2,7 +2,8 @@ import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { CoachScreen, HistoryScreen, HomeScreen, ProfileScreen } from "@src/screens";
+import { useOnboardingStatus } from "@src/hooks";
+import { CoachScreen, HistoryScreen, HomeScreen, ProfileScreen, OnboardingScreen } from "@src/screens";
 import { getTabBarStyle, tabBarLabelStyle } from "./styles";
 
 export type RootTabParamList = {
@@ -15,22 +16,33 @@ export type RootTabParamList = {
 const Tab = createBottomTabNavigator<RootTabParamList>();
 
 export function RootNavigator() {
+  const { isReady, isCompleted } = useOnboardingStatus();
   const insets = useSafeAreaInsets();
+
+  if (!isReady) {
+    // 온보딩 상태 복원 중에는 렌더링을 보류.
+    return null;
+  }
 
   return (
     <NavigationContainer>
-      <Tab.Navigator
-        screenOptions={{
-          headerShown: false,
-          tabBarStyle: getTabBarStyle(insets),
-          tabBarLabelStyle,
-        }}
-      >
-        <Tab.Screen name="Home" component={HomeScreen} />
-        <Tab.Screen name="History" component={HistoryScreen} />
-        <Tab.Screen name="Coach" component={CoachScreen} />
-        <Tab.Screen name="Profile" component={ProfileScreen} />
-      </Tab.Navigator>
+      {isCompleted ? (
+        <Tab.Navigator
+          screenOptions={{
+            headerShown: false,
+            tabBarStyle: getTabBarStyle(insets),
+            tabBarLabelStyle,
+          }}
+        >
+          <Tab.Screen name="Home" component={HomeScreen} />
+          <Tab.Screen name="History" component={HistoryScreen} />
+          <Tab.Screen name="Coach" component={CoachScreen} />
+          <Tab.Screen name="Profile" component={ProfileScreen} />
+        </Tab.Navigator>
+      ) : (
+        // 온보딩 완료 전에는 단일 화면 플로우로 진입.
+        <OnboardingScreen />
+      )}
     </NavigationContainer>
   );
 }
