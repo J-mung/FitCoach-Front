@@ -6,6 +6,7 @@ export const styles = {
   container: tailwind(`${tokens.layout.full} ${tokens.color.surface} ${tokens.spacing.screenTop}`),
   // 헤더/콘텐츠 좌우 패딩은 분리해서 관리한다.
   headerContent: tailwind(`${tokens.spacing.screenX} ${tokens.spacing.sectionGap}`),
+  divider: tailwind(`h-[1px] ${tokens.color.border}`),
   contentContainer: tailwind(`${tokens.layout.full} ${tokens.spacing.screenX}`),
   header: tailwind(tokens.spacing.sectionGap),
   title: tailwind(tokens.spacing.titleGap),

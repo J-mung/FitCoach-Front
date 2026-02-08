@@ -158,6 +158,7 @@ export function OnboardingScreen() {
           </Typography>
         </View>
       </View>
+      <View style={styles.divider} />
 
       {/* 단계별 콘텐츠 영역 */}
       <View style={styles.contentContainer}>

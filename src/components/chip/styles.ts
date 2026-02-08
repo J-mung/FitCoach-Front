@@ -4,7 +4,7 @@ import { tokens } from "@src/styles";
 // 칩 스타일: 선택 상태에 따른 배경/텍스트를 분리한다.
 export const styles = {
   base: tailwind(
-    `${tokens.radius.full} ${tokens.spacing.chipPaddingX} ${tokens.spacing.chipPaddingY}`
+    `${tokens.radius.full} ${tokens.spacing.chipPaddingX} ${tokens.spacing.chipPaddingY} ${tokens.shadow.sm}`
   ),
   variants: {
     default: tailwind(`${tokens.color.card} ${tokens.border.base} ${tokens.color.border}`),
