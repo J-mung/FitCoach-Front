@@ -1,5 +1,5 @@
-import React, { useMemo, useState } from "react";
-import { View } from "react-native";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { Animated, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, Typography } from "@src/components";
 import { useOnboardingStatus } from "@src/hooks";
@@ -61,6 +61,18 @@ export function OnboardingScreen() {
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
   const isCtaDisabled = isLoading || isError || !canProceed;
 
+  // 진행률 애니메이션 값.
+  const progress = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    // 단계 이동 시 진행률을 부드럽게 변경한다.
+    Animated.timing(progress, {
+      toValue: (step + 1) / totalSteps,
+      duration: 220,
+      useNativeDriver: false,
+    }).start();
+  }, [progress, step, totalSteps]);
+
   // 다음 단계로 이동하거나 마지막 단계에서 완료 처리한다.
   const handleNext = () => {
     if (!canProceed) {
@@ -116,111 +128,114 @@ export function OnboardingScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Typography variant="titleLg" style={styles.title}>
-          FitCoach 온보딩
-        </Typography>
-        <Typography variant="bodyMd" tone="secondary">
-          목표와 선호를 알려주세요.
-        </Typography>
-      </View>
-
-      {/* 단계 인디케이터 */}
+      {/* 헤더 영역: 인디케이터 + 타이틀을 묶어서 관리한다. */}
       <View style={styles.step}>
         <View style={styles.indicatorRow}>
-          {Array.from({ length: totalSteps }).map((_, index) => {
-            const isActive = index === step;
-            return (
-              <View
-                key={`step-dot-${index}`}
-                style={[
-                  styles.indicatorDot,
-                  isActive ? styles.indicatorDotActive : null,
-                ]}
-              />
-            );
-          })}
-          <Typography variant="bodySm" tone="secondary">
-            {stepLabel}
+          <View style={styles.indicatorTrack}>
+            {/* 진행률은 현재 단계 기준으로 채운다. */}
+            <Animated.View
+              style={[
+                styles.indicatorFill,
+                {
+                  width: progress.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: ["0%", "100%"],
+                  }),
+                },
+              ]}
+            />
+          </View>
+        </View>
+      </View>
+
+      <View style={styles.headerContent}>
+        <View style={styles.header}>
+          <Typography variant="titleLg" style={styles.title}>
+            FitCoach 온보딩
+          </Typography>
+          <Typography variant="bodyMd" tone="secondary">
+            목표와 선호를 알려주세요.
           </Typography>
         </View>
       </View>
 
       {/* 단계별 콘텐츠 영역 */}
-      <View style={styles.body}>
-        {isLoading ? (
-          <Typography variant="bodyMd" tone="secondary">
-            옵션을 불러오는 중입니다.
-          </Typography>
-        ) : isError ? (
-          <Typography variant="bodyMd" tone="secondary">
-            옵션을 불러오지 못했습니다.
-          </Typography>
-        ) : (
-          <>
-            {activeStep.type === "welcome" ? <WelcomeStep /> : null}
+      <View style={styles.contentContainer}>
+        <View style={styles.body}>
+          {isLoading ? (
+            <Typography variant="bodyMd" tone="secondary">
+              옵션을 불러오는 중입니다.
+            </Typography>
+          ) : isError ? (
+            <Typography variant="bodyMd" tone="secondary">
+              옵션을 불러오지 못했습니다.
+            </Typography>
+          ) : (
+            <>
+              {activeStep.type === "welcome" ? <WelcomeStep /> : null}
 
-            {activeStep.type === "group" ? (
-              activeGroup ? (
-                <GroupStep
-                  group={activeGroup}
-                  selectedSingleId={
-                    activeGroup.key === "goal"
-                      ? formState.goalId
-                      : activeGroup.key === "experience"
-                      ? formState.experienceId
-                      : formState.equipmentId
-                  }
-                  selectedMultiIds={formState.focusAreaIds}
-                  onSelectSingle={(id) => {
-                    if (activeGroup.key === "goal") {
-                      handleSelectGoal(id);
-                      return;
+              {activeStep.type === "group" ? (
+                activeGroup ? (
+                  <GroupStep
+                    group={activeGroup}
+                    selectedSingleId={
+                      activeGroup.key === "goal"
+                        ? formState.goalId
+                        : activeGroup.key === "experience"
+                        ? formState.experienceId
+                        : formState.equipmentId
                     }
-                    if (activeGroup.key === "experience") {
-                      handleSelectExperience(id);
-                      return;
-                    }
-                    handleSelectEquipment(id);
-                  }}
-                  onToggleMulti={handleToggleFocus}
+                    selectedMultiIds={formState.focusAreaIds}
+                    onSelectSingle={(id) => {
+                      if (activeGroup.key === "goal") {
+                        handleSelectGoal(id);
+                        return;
+                      }
+                      if (activeGroup.key === "experience") {
+                        handleSelectExperience(id);
+                        return;
+                      }
+                      handleSelectEquipment(id);
+                    }}
+                    onToggleMulti={handleToggleFocus}
+                  />
+                ) : (
+                  <Typography variant="bodySm" tone="secondary">
+                    옵션이 준비되지 않았습니다.
+                  </Typography>
+                )
+              ) : null}
+
+              {activeStep.type === "summary" && groupMap ? (
+                <SummaryStep
+                  groupMap={groupMap}
+                  formState={formState}
+                  onEdit={(stepIndex) => setStep(stepIndex)}
                 />
-              ) : (
-                <Typography variant="bodySm" tone="secondary">
-                  옵션이 준비되지 않았습니다.
-                </Typography>
-              )
-            ) : null}
+              ) : null}
 
-            {activeStep.type === "summary" && groupMap ? (
-              <SummaryStep
-                groupMap={groupMap}
-                formState={formState}
-                onEdit={(stepIndex) => setStep(stepIndex)}
-              />
-            ) : null}
+              {activeStep.type === "completion" ? <CompletionStep /> : null}
+            </>
+          )}
+        </View>
 
-            {activeStep.type === "completion" ? <CompletionStep /> : null}
-          </>
-        )}
-      </View>
-
-      {/* 이전/다음/완료 CTA */}
-      <View style={styles.footer}>
-        <View style={styles.ctaRow}>
-          <Button
-            title="이전"
-            variant="secondary"
-            disabled={isFirstStep}
-            style={styles.ctaButtonSecondary}
-            onPress={handlePrev}
-          />
-          <Button
-            title={isLastStep ? "완료" : "다음"}
-            disabled={isCtaDisabled}
-            style={styles.ctaButtonPrimary}
-            onPress={handleNext}
-          />
+        {/* 이전/다음/완료 CTA */}
+        <View style={styles.footer}>
+          <View style={styles.ctaRow}>
+            <Button
+              title="이전"
+              variant="secondary"
+              disabled={isFirstStep}
+              style={styles.ctaButtonSecondary}
+              onPress={handlePrev}
+            />
+            <Button
+              title={isLastStep ? "완료" : "다음"}
+              disabled={isCtaDisabled}
+              style={styles.ctaButtonPrimary}
+              onPress={handleNext}
+            />
+          </View>
         </View>
       </View>
     </SafeAreaView>

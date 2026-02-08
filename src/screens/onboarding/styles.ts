@@ -3,9 +3,10 @@ import { tokens } from "@src/styles";
 
 // 온보딩 화면 스타일: 토큰 기반으로 조합한다.
 export const styles = {
-  container: tailwind(
-    `${tokens.layout.full} ${tokens.color.surface} ${tokens.spacing.screenX} ${tokens.spacing.screenTop}`
-  ),
+  container: tailwind(`${tokens.layout.full} ${tokens.color.surface} ${tokens.spacing.screenTop}`),
+  // 헤더/콘텐츠 좌우 패딩은 분리해서 관리한다.
+  headerContent: tailwind(`${tokens.spacing.screenX} ${tokens.spacing.sectionGap}`),
+  contentContainer: tailwind(`${tokens.layout.full} ${tokens.spacing.screenX}`),
   header: tailwind(tokens.spacing.sectionGap),
   title: tailwind(tokens.spacing.titleGap),
   step: tailwind(tokens.spacing.sectionGap),
@@ -21,11 +22,13 @@ export const styles = {
   // 하단 CTA 영역 여백.
   footer: tailwind(tokens.spacing.footerTop),
   // 단계 표시 영역.
-  indicatorRow: tailwind(tokens.layout.rowCenter),
-  indicatorDot: tailwind(
-    `${tokens.size.dot} ${tokens.radius.full} ${tokens.color.dot} ${tokens.spacing.dotGap}`
+  indicatorRow: tailwind("w-full"),
+  indicatorTrack: tailwind(
+    `${tokens.layout.full} ${tokens.size.progressBar} ${tokens.radius.full} ${tokens.color.dot}`
   ),
-  indicatorDotActive: tailwind(tokens.color.dotActive),
+  indicatorFill: tailwind(
+    `${tokens.size.progressBar} ${tokens.radius.full} ${tokens.color.dotActive}`
+  ),
   // CTA 버튼 영역.
   ctaRow: tailwind(tokens.layout.rowCenter),
   ctaButtonPrimary: tailwind(tokens.layout.full),

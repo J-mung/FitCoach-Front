@@ -75,6 +75,7 @@ export const tokens = {
   size: {
     dot: "h-2 w-2",
     headerSlot: "w-32",
+    progressBar: "h-2",
   },
   shadow: {
     sm: "shadow-sm",
