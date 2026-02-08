@@ -14,6 +14,8 @@ export const tokens = {
     contentGap: "mb-4",
     choiceTop: "mt-6",
     chipGap: "mr-8 mb-8",
+    summaryRowGap: "mb-12",
+    summaryLabelGap: "mb-4",
     dotGap: "mr-2",
     ctaGap: "mr-3",
     toggleGap: "mr-4",

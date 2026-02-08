@@ -15,6 +15,9 @@ export const styles = {
   choiceWrap: tailwind(`${tokens.layout.rowCenter} flex-wrap ${tokens.spacing.choiceTop}`),
   // 칩 간격.
   chipItem: tailwind(tokens.spacing.chipGap),
+  // 요약 행/라벨 간격.
+  summaryRow: tailwind(tokens.spacing.summaryRowGap),
+  summaryLabel: tailwind(tokens.spacing.summaryLabelGap),
   // 하단 CTA 영역 여백.
   footer: tailwind(tokens.spacing.footerTop),
   // 단계 표시 영역.

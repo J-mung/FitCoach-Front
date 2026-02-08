@@ -8,7 +8,7 @@ export type OnboardingOptionItem = {
 };
 
 export type OnboardingOptionGroup = {
-  key: "goal" | "experience" | "focus_area";
+  key: "goal" | "experience" | "equipment" | "focus_area";
   title: string;
   description: string;
   selectionType: "single" | "multi";
@@ -21,7 +21,8 @@ export type OnboardingOptionsResponse = {
 };
 
 // 온보딩 옵션 조회용 쿼리 키.
-const QUERY_KEY = ["onboarding-options"] as const;
+// 옵션 구조 변경 시 버전을 올려 캐시를 무효화한다.
+const QUERY_KEY = ["onboarding-options", "v2"] as const;
 
 // Mock JSON을 로드하여 옵션 데이터를 반환한다(서버 준비 전까지 사용).
 const fetchOnboardingOptions = async (): Promise<OnboardingOptionsResponse> => {

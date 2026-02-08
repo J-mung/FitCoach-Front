@@ -1,20 +1,30 @@
 import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, Chip, Typography } from "@src/components";
+import { Button, Typography } from "@src/components";
 import { useOnboardingStatus } from "@src/hooks";
 import { useOnboardingOptions } from "@src/queries";
 import { styles } from "./styles";
+import { CompletionStep } from "./steps/CompletionStep";
+import { GroupStep } from "./steps/GroupStep";
+import { SummaryStep } from "./steps/SummaryStep";
+import { WelcomeStep } from "./steps/WelcomeStep";
+import type { GroupMap, OnboardingFormState, StepConfig } from "./types";
 
-type OnboardingFormState = {
-  goalId: string | null;
-  experienceId: string | null;
-  focusAreaIds: string[];
-};
+// 기본 단계 수(데이터 미로딩 시 fallback).
+const TOTAL_STEPS = 7;
 
-const TOTAL_STEPS = 3;
+// 온보딩 단계 정의(와이어 기준).
+const STEP_FLOW: StepConfig[] = [
+  { type: "welcome" },
+  { type: "group", key: "goal" },
+  { type: "group", key: "experience" },
+  { type: "group", key: "equipment" },
+  { type: "group", key: "focus_area" },
+  { type: "summary" },
+  { type: "completion" },
+];
 
-// 단계별 안내 문구. 추후 입력 UI가 추가되면 이 구조를 확장한다.
 export function OnboardingScreen() {
   const { setCompleted } = useOnboardingStatus();
   // 온보딩 선택지 데이터는 React Query로 가져온다.
@@ -24,13 +34,16 @@ export function OnboardingScreen() {
   const [formState, setFormState] = useState<OnboardingFormState>({
     goalId: null,
     experienceId: null,
+    equipmentId: null,
     focusAreaIds: [],
   });
 
   // 데이터 로드 전에는 기본 단계 정보를 가드한다.
   const groups = data?.groups ?? [];
-  const totalSteps = groups.length || TOTAL_STEPS;
-  const activeGroup = groups[step];
+  const totalSteps = STEP_FLOW.length || TOTAL_STEPS;
+  const activeStep = STEP_FLOW[step] ?? STEP_FLOW[0];
+  const activeGroup =
+    activeStep.type === "group" ? groups.find((group) => group.key === activeStep.key) : null;
   // 현재 단계 표시 텍스트(예: 1/3).
   const stepLabel = useMemo(() => `${step + 1}/${totalSteps}`, [step, totalSteps]);
   // CTA 상태 계산.
@@ -38,9 +51,13 @@ export function OnboardingScreen() {
   const isLastStep = step === totalSteps - 1;
   // 필수 입력이 없으면 다음/완료 버튼을 비활성화한다.
   const canProceed =
-    (step === 0 && !!formState.goalId) ||
-    (step === 1 && !!formState.experienceId) ||
-    (step === 2 && formState.focusAreaIds.length > 0);
+    activeStep.type === "welcome" ||
+    (activeStep.type === "group" && activeStep.key === "goal" && !!formState.goalId) ||
+    (activeStep.type === "group" && activeStep.key === "experience" && !!formState.experienceId) ||
+    (activeStep.type === "group" && activeStep.key === "equipment" && !!formState.equipmentId) ||
+    (activeStep.type === "group" && activeStep.key === "focus_area" && formState.focusAreaIds.length > 0) ||
+    activeStep.type === "summary" ||
+    activeStep.type === "completion";
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
   const isCtaDisabled = isLoading || isError || !canProceed;
 
@@ -70,6 +87,10 @@ export function OnboardingScreen() {
     setFormState((prev) => ({ ...prev, experienceId: value }));
   };
 
+  const handleSelectEquipment = (value: string) => {
+    setFormState((prev) => ({ ...prev, equipmentId: value }));
+  };
+
   const handleToggleFocus = (value: string) => {
     setFormState((prev) => {
       // 집중 부위는 복수 선택을 허용한다.
@@ -83,67 +104,15 @@ export function OnboardingScreen() {
     });
   };
 
-  // 현재 단계에 맞는 선택 UI를 렌더링한다.
-  const renderChoices = () => {
-    if (!activeGroup) {
+  const groupMap = useMemo<GroupMap | null>(() => {
+    if (!data) {
       return null;
     }
-
-    if (activeGroup.key === "goal") {
-      return (
-        <View style={styles.choiceWrap}>
-          {activeGroup.items.map((option) => {
-            const isSelected = formState.goalId === option.id;
-            return (
-              <View key={option.id} style={styles.chipItem}>
-                <Chip
-                  label={option.label}
-                  variant={isSelected ? "selected" : "default"}
-                  onPress={() => handleSelectGoal(option.id)}
-                />
-              </View>
-            );
-          })}
-        </View>
-      );
-    }
-
-    if (activeGroup.key === "experience") {
-      return (
-        <View style={styles.choiceWrap}>
-          {activeGroup.items.map((option) => {
-            const isSelected = formState.experienceId === option.id;
-            return (
-              <View key={option.id} style={styles.chipItem}>
-                <Chip
-                  label={option.label}
-                  variant={isSelected ? "selected" : "default"}
-                  onPress={() => handleSelectExperience(option.id)}
-                />
-              </View>
-            );
-          })}
-        </View>
-      );
-    }
-
-    return (
-      <View style={styles.choiceWrap}>
-        {activeGroup.items.map((option) => {
-          const isSelected = formState.focusAreaIds.includes(option.id);
-          return (
-            <View key={option.id} style={styles.chipItem}>
-              <Chip
-                label={option.label}
-                variant={isSelected ? "selected" : "default"}
-                onPress={() => handleToggleFocus(option.id)}
-              />
-            </View>
-          );
-        })}
-      </View>
-    );
-  };
+    return data.groups.reduce<GroupMap>((acc, group) => {
+      acc[group.key] = group;
+      return acc;
+    }, {} as GroupMap);
+  }, [data]);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -159,7 +128,7 @@ export function OnboardingScreen() {
       {/* 단계 인디케이터 */}
       <View style={styles.step}>
         <View style={styles.indicatorRow}>
-          {Array.from({ length: TOTAL_STEPS }).map((_, index) => {
+          {Array.from({ length: totalSteps }).map((_, index) => {
             const isActive = index === step;
             return (
               <View
@@ -189,11 +158,49 @@ export function OnboardingScreen() {
           </Typography>
         ) : (
           <>
-            <Typography variant="titleMd">{activeGroup?.title}</Typography>
-            <Typography variant="bodyMd" tone="secondary" style={styles.contentGap}>
-              {activeGroup?.description}
-            </Typography>
-            {renderChoices()}
+            {activeStep.type === "welcome" ? <WelcomeStep /> : null}
+
+            {activeStep.type === "group" ? (
+              activeGroup ? (
+                <GroupStep
+                  group={activeGroup}
+                  selectedSingleId={
+                    activeGroup.key === "goal"
+                      ? formState.goalId
+                      : activeGroup.key === "experience"
+                      ? formState.experienceId
+                      : formState.equipmentId
+                  }
+                  selectedMultiIds={formState.focusAreaIds}
+                  onSelectSingle={(id) => {
+                    if (activeGroup.key === "goal") {
+                      handleSelectGoal(id);
+                      return;
+                    }
+                    if (activeGroup.key === "experience") {
+                      handleSelectExperience(id);
+                      return;
+                    }
+                    handleSelectEquipment(id);
+                  }}
+                  onToggleMulti={handleToggleFocus}
+                />
+              ) : (
+                <Typography variant="bodySm" tone="secondary">
+                  옵션이 준비되지 않았습니다.
+                </Typography>
+              )
+            ) : null}
+
+            {activeStep.type === "summary" && groupMap ? (
+              <SummaryStep
+                groupMap={groupMap}
+                formState={formState}
+                onEdit={(stepIndex) => setStep(stepIndex)}
+              />
+            ) : null}
+
+            {activeStep.type === "completion" ? <CompletionStep /> : null}
           </>
         )}
       </View>

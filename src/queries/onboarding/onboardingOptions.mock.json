@@ -26,11 +26,24 @@
       ]
     },
     {
+      "key": "equipment",
+      "title": "운동 장비",
+      "description": "운동 가능한 환경/장비를 알려주세요.",
+      "selectionType": "single",
+      "sortOrder": 3,
+      "items": [
+        { "id": "equip_home", "label": "집", "sortOrder": 1 },
+        { "id": "equip_gym", "label": "헬스장", "sortOrder": 2 },
+        { "id": "equip_dumbbell", "label": "덤벨", "sortOrder": 3 },
+        { "id": "equip_bodyweight", "label": "맨몸", "sortOrder": 4 }
+      ]
+    },
+    {
       "key": "focus_area",
       "title": "집중 부위",
       "description": "이번에 집중하고 싶은 부위를 골라주세요.",
       "selectionType": "multi",
-      "sortOrder": 3,
+      "sortOrder": 4,
       "items": [
         { "id": "focus_upper", "label": "상체", "sortOrder": 1 },
         { "id": "focus_lower", "label": "하체", "sortOrder": 2 },
