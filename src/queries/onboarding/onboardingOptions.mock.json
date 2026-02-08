@@ -1,0 +1,42 @@
+{
+  "groups": [
+    {
+      "key": "goal",
+      "title": "운동 목표",
+      "description": "달성하고 싶은 목표를 선택해주세요.",
+      "selectionType": "single",
+      "sortOrder": 1,
+      "items": [
+        { "id": "goal_weight_loss", "label": "체중 감량", "sortOrder": 1 },
+        { "id": "goal_muscle_gain", "label": "근육 증가", "sortOrder": 2 },
+        { "id": "goal_endurance", "label": "체력 향상", "sortOrder": 3 },
+        { "id": "goal_posture", "label": "자세 개선", "sortOrder": 4 }
+      ]
+    },
+    {
+      "key": "experience",
+      "title": "운동 경험",
+      "description": "현재 운동 수준을 알려주세요.",
+      "selectionType": "single",
+      "sortOrder": 2,
+      "items": [
+        { "id": "exp_beginner", "label": "초보", "sortOrder": 1 },
+        { "id": "exp_intermediate", "label": "중급", "sortOrder": 2 },
+        { "id": "exp_advanced", "label": "고급", "sortOrder": 3 }
+      ]
+    },
+    {
+      "key": "focus_area",
+      "title": "집중 부위",
+      "description": "이번에 집중하고 싶은 부위를 골라주세요.",
+      "selectionType": "multi",
+      "sortOrder": 3,
+      "items": [
+        { "id": "focus_upper", "label": "상체", "sortOrder": 1 },
+        { "id": "focus_lower", "label": "하체", "sortOrder": 2 },
+        { "id": "focus_core", "label": "코어", "sortOrder": 3 },
+        { "id": "focus_cardio", "label": "유산소", "sortOrder": 4 }
+      ]
+    }
+  ]
+}
