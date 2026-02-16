@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import type { OnboardingOptionsResponse } from "@features/onboarding/api";
 import type { GroupMap, OnboardingFormState } from "./types";
-import { STEP_FLOW, TOTAL_STEPS } from "./constants";
+import { buildStepFlow, DEFAULT_GROUP_KEYS, TOTAL_STEPS } from "./constants";
 
 type UseOnboardingFlowParams = {
   data?: OnboardingOptionsResponse;
@@ -18,19 +18,14 @@ export function useOnboardingFlow({
 }: UseOnboardingFlowParams) {
   // 온보딩 진행 단계와 입력 상태.
   const [step, setStep] = useState(0);
-  const [formState, setFormState] = useState<OnboardingFormState>({
-    goalId: null,
-    levelId: null,
-    workoutsPerWeekId: null,
-    sessionMinutesId: null,
-    locationId: null,
-    equipmentIds: [],
-  });
+  const [formState, setFormState] = useState<OnboardingFormState>({});
 
   // 데이터 로드 전에는 기본 단계 정보를 가드한다.
   const groups = data?.groups ?? [];
-  const totalSteps = STEP_FLOW.length || TOTAL_STEPS;
-  const activeStep = STEP_FLOW[step] ?? STEP_FLOW[0];
+  const groupKeys = groups.length > 0 ? groups.map((group) => group.key) : DEFAULT_GROUP_KEYS;
+  const stepFlow = buildStepFlow(groupKeys);
+  const totalSteps = stepFlow.length || TOTAL_STEPS;
+  const activeStep = stepFlow[step] ?? stepFlow[0];
   const activeGroup =
     activeStep.type === "group" ? groups.find((group) => group.key === activeStep.key) : null;
 
@@ -42,12 +37,13 @@ export function useOnboardingFlow({
     activeStep.type === "welcome" ||
     (activeStep.type === "group" &&
       activeGroup &&
-      ((activeStep.key === "goal" && !!formState.goalId) ||
-        (activeStep.key === "level" && !!formState.levelId) ||
-        (activeStep.key === "workouts_per_week" && !!formState.workoutsPerWeekId) ||
-        (activeStep.key === "session_minutes" && !!formState.sessionMinutesId) ||
-        (activeStep.key === "location" && !!formState.locationId) ||
-        (activeStep.key === "equipment" && formState.equipmentIds.length > 0))) ||
+      (() => {
+        const value = formState[activeGroup.key];
+        if (activeGroup.selectionType === "multi") {
+          return Array.isArray(value) && value.length > 0;
+        }
+        return typeof value === "string" && value.length > 0;
+      })()) ||
     activeStep.type === "summary" ||
     activeStep.type === "completion";
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
@@ -71,39 +67,23 @@ export function useOnboardingFlow({
   };
 
   // 선택 상태 업데이트 유틸(단일/복수 선택).
-  const handleSelectGoal = (value: string) => {
-    setFormState((prev) => ({ ...prev, goalId: value }));
+  const handleSelectSingle = (key: string, value: string) => {
+    setFormState((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleSelectLevel = (value: string) => {
-    setFormState((prev) => ({ ...prev, levelId: value }));
+  const handleSetMulti = (key: string, values: string[]) => {
+    setFormState((prev) => ({ ...prev, [key]: values }));
   };
 
-  const handleSelectWorkoutsPerWeek = (value: string) => {
-    setFormState((prev) => ({ ...prev, workoutsPerWeekId: value }));
-  };
-
-  const handleSelectSessionMinutes = (value: string) => {
-    setFormState((prev) => ({ ...prev, sessionMinutesId: value }));
-  };
-
-  const handleSelectLocation = (value: string) => {
-    setFormState((prev) => ({ ...prev, locationId: value }));
-  };
-
-  const handleSetEquipmentIds = (values: string[]) => {
-    setFormState((prev) => ({ ...prev, equipmentIds: values }));
-  };
-
-  const handleToggleEquipment = (value: string) => {
+  const handleToggleMulti = (key: string, value: string) => {
     setFormState((prev) => {
-      // 장비는 복수 선택을 허용한다.
-      const isSelected = prev.equipmentIds.includes(value);
+      // 복수 선택은 배열 기반으로 토글한다.
+      const current = prev[key];
+      const selected = Array.isArray(current) ? current : [];
+      const isSelected = selected.includes(value);
       return {
         ...prev,
-        equipmentIds: isSelected
-          ? prev.equipmentIds.filter((item) => item !== value)
-          : [...prev.equipmentIds, value],
+        [key]: isSelected ? selected.filter((item) => item !== value) : [...selected, value],
       };
     });
   };
@@ -126,17 +106,14 @@ export function useOnboardingFlow({
     activeStep,
     activeGroup,
     groupMap,
+    groups,
     isFirstStep,
     isLastStep,
     isCtaDisabled,
     handleNext,
     handlePrev,
-    handleSelectGoal,
-    handleSelectLevel,
-    handleSelectWorkoutsPerWeek,
-    handleSelectSessionMinutes,
-    handleSelectLocation,
-    handleSetEquipmentIds,
-    handleToggleEquipment,
+    handleSelectSingle,
+    handleSetMulti,
+    handleToggleMulti,
   };
 }

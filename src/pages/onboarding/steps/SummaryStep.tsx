@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Button, Chip, Typography } from "@src/components";
 import type { GroupMap, OnboardingFormState } from "@features/onboarding/model";
+import type { OnboardingOptionGroup } from "@features/onboarding/api";
 import { styles } from "../styles";
 
 type SummaryStepProps = {
+  groups: OnboardingOptionGroup[];
   groupMap: GroupMap;
   formState: OnboardingFormState;
   onSelectSingle: (key: keyof GroupMap, id: string) => void;
@@ -13,6 +15,7 @@ type SummaryStepProps = {
 
 // 선택 결과 요약 단계.
 export function SummaryStep({
+  groups,
   groupMap,
   formState,
   onSelectSingle,
@@ -20,16 +23,21 @@ export function SummaryStep({
 }: SummaryStepProps) {
   // 요약 화면에서 열려 있는 수정 섹션 키.
   const [expandedKey, setExpandedKey] = useState<keyof GroupMap | null>(null);
-  // 다중 선택(장비)은 임시 상태로 보관 후 완료 버튼에서 반영한다.
-  const [pendingEquipmentIds, setPendingEquipmentIds] = useState<string[]>(
-    formState.equipmentIds
-  );
+  // 다중 선택은 임시 상태로 보관 후 완료 버튼에서 반영한다.
+  const [pendingMultiMap, setPendingMultiMap] = useState<Record<string, string[]>>({});
 
   useEffect(() => {
-    if (expandedKey === "equipment") {
-      setPendingEquipmentIds(formState.equipmentIds);
+    if (!expandedKey) {
+      return;
     }
-  }, [expandedKey, formState.equipmentIds]);
+    const group = groupMap[expandedKey];
+    if (!group || group.selectionType !== "multi") {
+      return;
+    }
+    const value = formState[group.key];
+    const nextValue = Array.isArray(value) ? value : [];
+    setPendingMultiMap((prev) => ({ ...prev, [group.key]: nextValue }));
+  }, [expandedKey, formState, groupMap]);
 
   const resolveLabel = (groupKey: keyof GroupMap, id: string | null) =>
     groupMap[groupKey]?.items.find((item) => item.id === id)?.label ?? "-";
@@ -41,22 +49,8 @@ export function SummaryStep({
       .join(", ") || "-";
 
   const resolveSingleId = (groupKey: keyof GroupMap) => {
-    if (groupKey === "goal") {
-      return formState.goalId;
-    }
-    if (groupKey === "level") {
-      return formState.levelId;
-    }
-    if (groupKey === "workouts_per_week") {
-      return formState.workoutsPerWeekId;
-    }
-    if (groupKey === "session_minutes") {
-      return formState.sessionMinutesId;
-    }
-    if (groupKey === "location") {
-      return formState.locationId;
-    }
-    return null;
+    const value = formState[groupKey];
+    return typeof value === "string" ? value : null;
   };
 
   const handleToggleExpanded = (groupKey: keyof GroupMap) => {
@@ -70,7 +64,7 @@ export function SummaryStep({
     }
     const isMulti = group.selectionType === "multi";
     const selectedSingleId = resolveSingleId(groupKey);
-    const selectedMultiIds = groupKey === "equipment" ? pendingEquipmentIds : [];
+    const selectedMultiIds = pendingMultiMap[groupKey] ?? [];
 
     return (
       <View style={styles.summaryEditBlock}>
@@ -86,11 +80,13 @@ export function SummaryStep({
                   variant={isSelected ? "selected" : "default"}
                   onPress={() => {
                     if (isMulti) {
-                      setPendingEquipmentIds((prev) =>
-                        prev.includes(option.id)
-                          ? prev.filter((item) => item !== option.id)
-                          : [...prev, option.id]
-                      );
+                      setPendingMultiMap((prev) => {
+                        const current = prev[groupKey] ?? [];
+                        const next = current.includes(option.id)
+                          ? current.filter((item) => item !== option.id)
+                          : [...current, option.id];
+                        return { ...prev, [groupKey]: next };
+                      });
                       return;
                     }
                     onSelectSingle(groupKey, option.id);
@@ -107,7 +103,7 @@ export function SummaryStep({
             size="md"
             onPress={() => {
               if (isMulti) {
-                onSetMulti(groupKey, pendingEquipmentIds);
+                onSetMulti(groupKey, pendingMultiMap[groupKey] ?? []);
               }
               setExpandedKey(null);
             }}
@@ -124,85 +120,30 @@ export function SummaryStep({
         필요하면 수정할 수 있어요.
       </Typography>
 
-      <View style={styles.summaryRow}>
-        <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
-          운동 목표
-        </Typography>
-        <Typography variant="bodyMd">{resolveLabel("goal", formState.goalId)}</Typography>
-        <Button title="수정" variant="ghost" onPress={() => handleToggleExpanded("goal")} />
-      </View>
-      {expandedKey === "goal" ? renderEditOptions("goal") : null}
+      {groups.map((group) => {
+        const value = formState[group.key];
+        const summaryValue =
+          group.selectionType === "multi"
+            ? resolveMulti(group.key, Array.isArray(value) ? value : [])
+            : resolveLabel(group.key, typeof value === "string" ? value : null);
 
-      <View style={styles.summaryRow}>
-        <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
-          운동 수준
-        </Typography>
-        <Typography variant="bodyMd">
-          {resolveLabel("level", formState.levelId)}
-        </Typography>
-        <Button title="수정" variant="ghost" onPress={() => handleToggleExpanded("level")} />
-      </View>
-      {expandedKey === "level" ? renderEditOptions("level") : null}
-
-      <View style={styles.summaryRow}>
-        <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
-          주당 운동일
-        </Typography>
-        <Typography variant="bodyMd">
-          {resolveLabel("workouts_per_week", formState.workoutsPerWeekId)}
-        </Typography>
-        <Button
-          title="수정"
-          variant="ghost"
-          onPress={() => handleToggleExpanded("workouts_per_week")}
-        />
-      </View>
-      {expandedKey === "workouts_per_week" ? renderEditOptions("workouts_per_week") : null}
-
-      <View style={styles.summaryRow}>
-        <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
-          운동 시간
-        </Typography>
-        <Typography variant="bodyMd">
-          {resolveLabel("session_minutes", formState.sessionMinutesId)}
-        </Typography>
-        <Button
-          title="수정"
-          variant="ghost"
-          onPress={() => handleToggleExpanded("session_minutes")}
-        />
-      </View>
-      {expandedKey === "session_minutes" ? renderEditOptions("session_minutes") : null}
-
-      <View style={styles.summaryRow}>
-        <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
-          운동 장소
-        </Typography>
-        <Typography variant="bodyMd">
-          {resolveLabel("location", formState.locationId)}
-        </Typography>
-        <Button
-          title="수정"
-          variant="ghost"
-          onPress={() => handleToggleExpanded("location")}
-        />
-      </View>
-      {expandedKey === "location" ? renderEditOptions("location") : null}
-
-      <View style={styles.summaryRow}>
-        <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
-          보유 장비
-        </Typography>
-        <Typography variant="bodyMd">
-          {resolveMulti("equipment", formState.equipmentIds)}
-        </Typography>
-        <Button
-          title="수정"
-          variant="ghost"
-          onPress={() => handleToggleExpanded("equipment")}
-        />
-      </View>
-      {expandedKey === "equipment" ? renderEditOptions("equipment") : null}
+        return (
+          <View key={group.key}>
+            <View style={styles.summaryRow}>
+              <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
+                {group.title}
+              </Typography>
+              <Typography variant="bodyMd">{summaryValue}</Typography>
+              <Button
+                title="수정"
+                variant="ghost"
+                onPress={() => handleToggleExpanded(group.key)}
+              />
+            </View>
+            {expandedKey === group.key ? renderEditOptions(group.key) : null}
+          </View>
+        );
+      })}
     </View>
   );
 }

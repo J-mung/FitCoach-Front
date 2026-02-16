@@ -30,18 +30,15 @@ export function OnboardingScreen() {
     activeStep,
     activeGroup,
     groupMap,
+    groups,
     isFirstStep,
     isLastStep,
     isCtaDisabled,
     handleNext,
     handlePrev,
-    handleSelectGoal,
-    handleSelectLevel,
-    handleSelectWorkoutsPerWeek,
-    handleSelectSessionMinutes,
-    handleSelectLocation,
-    handleSetEquipmentIds,
-    handleToggleEquipment,
+    handleSelectSingle,
+    handleSetMulti,
+    handleToggleMulti,
   } = useOnboardingFlow({
     data,
     isLoading,
@@ -89,43 +86,17 @@ export function OnboardingScreen() {
                   <GroupStep
                     group={activeGroup}
                     selectedSingleId={
-                      activeGroup.key === "goal"
-                        ? formState.goalId
-                        : activeGroup.key === "level"
-                        ? formState.levelId
-                        : activeGroup.key === "workouts_per_week"
-                        ? formState.workoutsPerWeekId
-                        : activeGroup.key === "session_minutes"
-                        ? formState.sessionMinutesId
-                        : activeGroup.key === "location"
-                        ? formState.locationId
+                      typeof formState[activeGroup.key] === "string"
+                        ? (formState[activeGroup.key] as string)
                         : null
                     }
-                    selectedMultiIds={formState.equipmentIds}
-                    onSelectSingle={(id) => {
-                      if (activeGroup.key === "goal") {
-                        handleSelectGoal(id);
-                        return;
-                      }
-                      if (activeGroup.key === "level") {
-                        handleSelectLevel(id);
-                        return;
-                      }
-                      if (activeGroup.key === "workouts_per_week") {
-                        handleSelectWorkoutsPerWeek(id);
-                        return;
-                      }
-                      if (activeGroup.key === "session_minutes") {
-                        handleSelectSessionMinutes(id);
-                        return;
-                      }
-                      if (activeGroup.key === "location") {
-                        handleSelectLocation(id);
-                        return;
-                      }
-                      handleToggleEquipment(id);
-                    }}
-                    onToggleMulti={handleToggleEquipment}
+                    selectedMultiIds={
+                      Array.isArray(formState[activeGroup.key])
+                        ? (formState[activeGroup.key] as string[])
+                        : []
+                    }
+                    onSelectSingle={(id) => handleSelectSingle(activeGroup.key, id)}
+                    onToggleMulti={(id) => handleToggleMulti(activeGroup.key, id)}
                   />
                 ) : (
                   <Typography variant="bodySm" tone="secondary">
@@ -136,35 +107,11 @@ export function OnboardingScreen() {
 
               {activeStep.type === "summary" && groupMap ? (
                 <SummaryStep
+                  groups={groups}
                   groupMap={groupMap}
                   formState={formState}
-                  onSelectSingle={(key, id) => {
-                    if (key === "goal") {
-                      handleSelectGoal(id);
-                      return;
-                    }
-                    if (key === "level") {
-                      handleSelectLevel(id);
-                      return;
-                    }
-                    if (key === "workouts_per_week") {
-                      handleSelectWorkoutsPerWeek(id);
-                      return;
-                    }
-                    if (key === "session_minutes") {
-                      handleSelectSessionMinutes(id);
-                      return;
-                    }
-                    if (key === "location") {
-                      handleSelectLocation(id);
-                      return;
-                    }
-                  }}
-                  onSetMulti={(key, ids) => {
-                    if (key === "equipment") {
-                      handleSetEquipmentIds(ids);
-                    }
-                  }}
+                  onSelectSingle={handleSelectSingle}
+                  onSetMulti={handleSetMulti}
                 />
               ) : null}
 
