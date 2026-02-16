@@ -11,9 +11,11 @@ import { CompletionStep } from "./steps/CompletionStep";
 import { GroupStep } from "./steps/GroupStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import { WelcomeStep } from "./steps/WelcomeStep";
-import { useOnboardingFlow } from "./useOnboardingFlow";
-import { useOnboardingProgress } from "./useOnboardingProgress";
-import { useOnboardingSwipe } from "./useOnboardingSwipe";
+import {
+  useOnboardingFlow,
+  useOnboardingProgress,
+  useOnboardingSwipe,
+} from "@features/onboarding/model";
 
 export function OnboardingScreen() {
   const { setCompleted } = useOnboardingStatus();

@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Button, Typography } from "@src/components";
-import type { GroupMap, OnboardingFormState } from "../types";
+import type { GroupMap, OnboardingFormState } from "@features/onboarding/model";
 import { styles } from "../styles";
 
 type SummaryStepProps = {
