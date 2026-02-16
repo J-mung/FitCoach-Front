@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import type { OnboardingOptionsResponse } from "@src/queries";
+import type { OnboardingOptionsResponse } from "@features/onboarding/api";
 import type { GroupMap, OnboardingFormState } from "./types";
 import { STEP_FLOW, TOTAL_STEPS } from "./constants";
 

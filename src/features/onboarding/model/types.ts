@@ -1,4 +1,4 @@
-import type { OnboardingOptionGroup } from "@src/queries";
+import type { OnboardingOptionGroup } from "@features/onboarding/api";
 
 export type OnboardingFormState = {
   goalId: string | null;

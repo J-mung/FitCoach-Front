@@ -1,7 +1,7 @@
 import React from "react";
 import { View } from "react-native";
 import { Chip, Typography } from "@src/components";
-import type { OnboardingOptionGroup } from "@src/queries";
+import type { OnboardingOptionGroup } from "@features/onboarding/api";
 import { styles } from "../styles";
 
 type GroupStepProps = {

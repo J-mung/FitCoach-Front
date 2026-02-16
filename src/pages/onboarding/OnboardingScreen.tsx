@@ -3,7 +3,7 @@ import { View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Typography } from "@src/components";
 import { useOnboardingStatus } from "@features/onboarding/model";
-import { useOnboardingOptions } from "@src/queries";
+import { useOnboardingOptions } from "@features/onboarding/api";
 import { OnboardingFooter } from "./OnboardingFooter";
 import { OnboardingHeader } from "./OnboardingHeader";
 import { styles } from "./styles";
