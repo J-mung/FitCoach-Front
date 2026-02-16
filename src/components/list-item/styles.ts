@@ -1,5 +1,5 @@
-import { tailwind } from "@src/theme/tailwind";
-import { tokens } from "@src/styles";
+import { tailwind } from "@shared/theme/tailwind";
+import { tokens } from "@shared/styles";
 
 // 리스트 아이템 스타일: 컨테이너/타이포/간격을 분리한다.
 export const styles = {

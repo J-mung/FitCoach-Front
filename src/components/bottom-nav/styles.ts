@@ -1,5 +1,5 @@
-import { tailwind } from "@src/theme/tailwind";
-import { tokens } from "@src/styles";
+import { tailwind } from "@shared/theme/tailwind";
+import { tokens } from "@shared/styles";
 
 // 하단 네비게이션 스타일: 눌림/아이콘 간격을 관리한다.
 export const styles = {

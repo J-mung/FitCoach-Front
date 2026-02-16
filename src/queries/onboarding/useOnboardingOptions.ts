@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { useMockApi } from "@src/utils";
+import { useMockApi } from "@shared/lib";
 
 export type OnboardingOptionItem = {
   id: string;
