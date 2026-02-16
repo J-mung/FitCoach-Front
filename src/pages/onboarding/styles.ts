@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 온보딩 화면 스타일: 토큰 기반으로 조합한다.
 export const styles = {

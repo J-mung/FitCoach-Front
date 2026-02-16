@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 타이포그래피 스타일: 폰트/톤 규칙을 분리한다.
 export const styles = {

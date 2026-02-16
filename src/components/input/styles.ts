@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 인풋 스타일: 기본/에러 상태와 라벨/헬퍼 텍스트를 분리한다.
 export const styles = {

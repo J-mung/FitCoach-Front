@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 헤더 슬롯 정렬/폭을 토큰으로 관리한다.
 export const styles = {

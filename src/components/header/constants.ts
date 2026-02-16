@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 헤더 기본 레이아웃/타이포 스타일.
 export const headerBaseStyle = tailwind(

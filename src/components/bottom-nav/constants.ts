@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 하단 네비게이션 레이아웃/텍스트 스타일.
 export const bottomNavContainerStyle = tailwind(

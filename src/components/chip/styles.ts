@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 칩 스타일: 선택 상태에 따른 배경/텍스트를 분리한다.
 export const styles = {

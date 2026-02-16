@@ -1,5 +1,5 @@
 import { tailwind } from "@shared/theme/tailwind";
-import { tokens } from "@shared/styles";
+import { tokens } from "@shared/styles/index";
 
 // 버튼 스타일: 공통/사이즈/톤을 분리한다.
 export const styles = {
