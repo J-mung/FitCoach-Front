@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMockApi } from "@shared/lib";
+import { fetchJson } from "@shared/api";
 
 export type OnboardingOptionItem = {
   id: string;
@@ -37,8 +38,14 @@ const normalizeOptions = (
 });
 
 // Mock JSON을 로드하여 옵션 데이터를 반환한다(서버 준비 전까지 사용).
-const fetchOnboardingOptions = async (): Promise<OnboardingOptionsResponse> => {
+const fetchMockOnboardingOptions = async (): Promise<OnboardingOptionsResponse> => {
   const data = require("./onboardingOptions.mock.json") as OnboardingOptionsResponse;
+  return normalizeOptions(data);
+};
+
+// 서버 API 호출(준비 완료 시 활성화).
+const fetchOnboardingOptions = async (): Promise<OnboardingOptionsResponse> => {
+  const data = await fetchJson<OnboardingOptionsResponse>("/onboarding/options");
   return normalizeOptions(data);
 };
 
@@ -48,10 +55,14 @@ export function useOnboardingOptions() {
     queryKey: QUERY_KEY,
     queryFn: async () => {
       if (useMock) {
-        return fetchOnboardingOptions();
+        return fetchMockOnboardingOptions();
       }
-      // 서버 준비 전까지는 Mock을 사용한다.
-      return fetchOnboardingOptions();
+      // 서버 준비 전에는 Mock을 유지한다.
+      try {
+        return await fetchOnboardingOptions();
+      } catch {
+        return fetchMockOnboardingOptions();
+      }
     },
     // 옵션은 자주 바뀌지 않으므로 캐시를 길게 유지한다.
     staleTime: 1000 * 60 * 60,
