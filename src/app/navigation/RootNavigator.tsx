@@ -3,7 +3,7 @@ import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { useOnboardingStatus } from "@src/hooks";
+import { useOnboardingStatus } from "@features/onboarding/model";
 import { CoachScreen } from "@pages/coach/CoachScreen";
 import { HistoryScreen } from "@pages/history/HistoryScreen";
 import { HomeScreen } from "@pages/home/HomeScreen";

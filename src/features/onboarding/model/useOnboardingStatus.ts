@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useOnboardingStore } from "@src/store/onboarding";
+import { useOnboardingStore } from "./store";
 
 export function useOnboardingStatus() {
   // 온보딩 상태와 저장 로직을 zustand에서 가져온다.

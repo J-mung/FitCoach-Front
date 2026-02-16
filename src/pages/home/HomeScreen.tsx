@@ -2,7 +2,7 @@ import React from "react";
 import { Switch, View } from "react-native";
 import { LayoutShell } from "@src/layout";
 import { Card, Typography } from "@src/components";
-import { useOnboardingStatus } from "@src/hooks";
+import { useOnboardingStatus } from "@features/onboarding/model";
 import { styles } from "./styles";
 
 export function HomeScreen() {

@@ -2,7 +2,7 @@ import React from "react";
 import { View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Typography } from "@src/components";
-import { useOnboardingStatus } from "@src/hooks";
+import { useOnboardingStatus } from "@features/onboarding/model";
 import { useOnboardingOptions } from "@src/queries";
 import { OnboardingFooter } from "./OnboardingFooter";
 import { OnboardingHeader } from "./OnboardingHeader";
