@@ -3,8 +3,7 @@ import { fetchJson } from "@shared/api";
 import { useMockApi } from "@shared/lib";
 import type { UserProfileDTO } from "./dto";
 import { normalizeUserProfile } from "./mappers";
-
-const QUERY_KEY = ["user-profile", "v1"] as const;
+import { PROFILE_QUERY_KEY } from "./constants";
 
 const fetchMockUserProfile = async (): Promise<UserProfileDTO> => {
   const data = require("./profile.mock.json") as UserProfileDTO;
@@ -20,7 +19,7 @@ export function useProfile() {
   const useMock = useMockApi();
 
   return useQuery({
-    queryKey: QUERY_KEY,
+    queryKey: PROFILE_QUERY_KEY,
     queryFn: async () => {
       if (useMock) {
         return fetchMockUserProfile();
