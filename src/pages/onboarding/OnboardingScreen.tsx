@@ -36,9 +36,12 @@ export function OnboardingScreen() {
     handleNext,
     handlePrev,
     handleSelectGoal,
-    handleSelectExperience,
-    handleSelectEquipment,
-    handleToggleFocus,
+    handleSelectLevel,
+    handleSelectWorkoutsPerWeek,
+    handleSelectSessionMinutes,
+    handleSelectLocation,
+    handleSetEquipmentIds,
+    handleToggleEquipment,
   } = useOnboardingFlow({
     data,
     isLoading,
@@ -88,23 +91,41 @@ export function OnboardingScreen() {
                     selectedSingleId={
                       activeGroup.key === "goal"
                         ? formState.goalId
-                        : activeGroup.key === "experience"
-                        ? formState.experienceId
-                        : formState.equipmentId
+                        : activeGroup.key === "level"
+                        ? formState.levelId
+                        : activeGroup.key === "workouts_per_week"
+                        ? formState.workoutsPerWeekId
+                        : activeGroup.key === "session_minutes"
+                        ? formState.sessionMinutesId
+                        : activeGroup.key === "location"
+                        ? formState.locationId
+                        : null
                     }
-                    selectedMultiIds={formState.focusAreaIds}
+                    selectedMultiIds={formState.equipmentIds}
                     onSelectSingle={(id) => {
                       if (activeGroup.key === "goal") {
                         handleSelectGoal(id);
                         return;
                       }
-                      if (activeGroup.key === "experience") {
-                        handleSelectExperience(id);
+                      if (activeGroup.key === "level") {
+                        handleSelectLevel(id);
                         return;
                       }
-                      handleSelectEquipment(id);
+                      if (activeGroup.key === "workouts_per_week") {
+                        handleSelectWorkoutsPerWeek(id);
+                        return;
+                      }
+                      if (activeGroup.key === "session_minutes") {
+                        handleSelectSessionMinutes(id);
+                        return;
+                      }
+                      if (activeGroup.key === "location") {
+                        handleSelectLocation(id);
+                        return;
+                      }
+                      handleToggleEquipment(id);
                     }}
-                    onToggleMulti={handleToggleFocus}
+                    onToggleMulti={handleToggleEquipment}
                   />
                 ) : (
                   <Typography variant="bodySm" tone="secondary">
@@ -117,7 +138,33 @@ export function OnboardingScreen() {
                 <SummaryStep
                   groupMap={groupMap}
                   formState={formState}
-                  onEdit={(stepIndex) => setStep(stepIndex)}
+                  onSelectSingle={(key, id) => {
+                    if (key === "goal") {
+                      handleSelectGoal(id);
+                      return;
+                    }
+                    if (key === "level") {
+                      handleSelectLevel(id);
+                      return;
+                    }
+                    if (key === "workouts_per_week") {
+                      handleSelectWorkoutsPerWeek(id);
+                      return;
+                    }
+                    if (key === "session_minutes") {
+                      handleSelectSessionMinutes(id);
+                      return;
+                    }
+                    if (key === "location") {
+                      handleSelectLocation(id);
+                      return;
+                    }
+                  }}
+                  onSetMulti={(key, ids) => {
+                    if (key === "equipment") {
+                      handleSetEquipmentIds(ids);
+                    }
+                  }}
                 />
               ) : null}
 

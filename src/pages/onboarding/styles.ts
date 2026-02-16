@@ -20,6 +20,8 @@ export const styles = {
   // 요약 행/라벨 간격.
   summaryRow: tailwind(tokens.spacing.summaryRowGap),
   summaryLabel: tailwind(tokens.spacing.summaryLabelGap),
+  summaryEditBlock: tailwind(tokens.spacing.contentGap),
+  summaryEditActions: tailwind("flex-row items-center justify-end"),
   // 하단 CTA 영역 여백.
   footer: tailwind(tokens.spacing.footerTop),
   // 단계 표시 영역.

@@ -20,9 +20,11 @@ export function useOnboardingFlow({
   const [step, setStep] = useState(0);
   const [formState, setFormState] = useState<OnboardingFormState>({
     goalId: null,
-    experienceId: null,
-    equipmentId: null,
-    focusAreaIds: [],
+    levelId: null,
+    workoutsPerWeekId: null,
+    sessionMinutesId: null,
+    locationId: null,
+    equipmentIds: [],
   });
 
   // 데이터 로드 전에는 기본 단계 정보를 가드한다.
@@ -41,9 +43,11 @@ export function useOnboardingFlow({
     (activeStep.type === "group" &&
       activeGroup &&
       ((activeStep.key === "goal" && !!formState.goalId) ||
-        (activeStep.key === "experience" && !!formState.experienceId) ||
-        (activeStep.key === "equipment" && !!formState.equipmentId) ||
-        (activeStep.key === "focus_area" && formState.focusAreaIds.length > 0))) ||
+        (activeStep.key === "level" && !!formState.levelId) ||
+        (activeStep.key === "workouts_per_week" && !!formState.workoutsPerWeekId) ||
+        (activeStep.key === "session_minutes" && !!formState.sessionMinutesId) ||
+        (activeStep.key === "location" && !!formState.locationId) ||
+        (activeStep.key === "equipment" && formState.equipmentIds.length > 0))) ||
     activeStep.type === "summary" ||
     activeStep.type === "completion";
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
@@ -71,23 +75,35 @@ export function useOnboardingFlow({
     setFormState((prev) => ({ ...prev, goalId: value }));
   };
 
-  const handleSelectExperience = (value: string) => {
-    setFormState((prev) => ({ ...prev, experienceId: value }));
+  const handleSelectLevel = (value: string) => {
+    setFormState((prev) => ({ ...prev, levelId: value }));
   };
 
-  const handleSelectEquipment = (value: string) => {
-    setFormState((prev) => ({ ...prev, equipmentId: value }));
+  const handleSelectWorkoutsPerWeek = (value: string) => {
+    setFormState((prev) => ({ ...prev, workoutsPerWeekId: value }));
   };
 
-  const handleToggleFocus = (value: string) => {
+  const handleSelectSessionMinutes = (value: string) => {
+    setFormState((prev) => ({ ...prev, sessionMinutesId: value }));
+  };
+
+  const handleSelectLocation = (value: string) => {
+    setFormState((prev) => ({ ...prev, locationId: value }));
+  };
+
+  const handleSetEquipmentIds = (values: string[]) => {
+    setFormState((prev) => ({ ...prev, equipmentIds: values }));
+  };
+
+  const handleToggleEquipment = (value: string) => {
     setFormState((prev) => {
-      // 집중 부위는 복수 선택을 허용한다.
-      const isSelected = prev.focusAreaIds.includes(value);
+      // 장비는 복수 선택을 허용한다.
+      const isSelected = prev.equipmentIds.includes(value);
       return {
         ...prev,
-        focusAreaIds: isSelected
-          ? prev.focusAreaIds.filter((item) => item !== value)
-          : [...prev.focusAreaIds, value],
+        equipmentIds: isSelected
+          ? prev.equipmentIds.filter((item) => item !== value)
+          : [...prev.equipmentIds, value],
       };
     });
   };
@@ -116,8 +132,11 @@ export function useOnboardingFlow({
     handleNext,
     handlePrev,
     handleSelectGoal,
-    handleSelectExperience,
-    handleSelectEquipment,
-    handleToggleFocus,
+    handleSelectLevel,
+    handleSelectWorkoutsPerWeek,
+    handleSelectSessionMinutes,
+    handleSelectLocation,
+    handleSetEquipmentIds,
+    handleToggleEquipment,
   };
 }

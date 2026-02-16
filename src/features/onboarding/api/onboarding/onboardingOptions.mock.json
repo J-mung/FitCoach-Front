@@ -7,48 +7,72 @@
       "selectionType": "single",
       "sortOrder": 1,
       "items": [
-        { "id": "goal_weight_loss", "label": "체중 감량", "sortOrder": 1 },
-        { "id": "goal_muscle_gain", "label": "근육 증가", "sortOrder": 2 },
-        { "id": "goal_endurance", "label": "체력 향상", "sortOrder": 3 },
-        { "id": "goal_posture", "label": "자세 개선", "sortOrder": 4 }
+        { "id": "goal_cut", "label": "감량", "sortOrder": 1 },
+        { "id": "goal_bulk", "label": "근비대", "sortOrder": 2 },
+        { "id": "goal_strength", "label": "스트렝스", "sortOrder": 3 },
+        { "id": "goal_maintain", "label": "유지", "sortOrder": 4 }
       ]
     },
     {
-      "key": "experience",
-      "title": "운동 경험",
+      "key": "level",
+      "title": "운동 수준",
       "description": "현재 운동 수준을 알려주세요.",
       "selectionType": "single",
       "sortOrder": 2,
       "items": [
-        { "id": "exp_beginner", "label": "초보", "sortOrder": 1 },
-        { "id": "exp_intermediate", "label": "중급", "sortOrder": 2 },
-        { "id": "exp_advanced", "label": "고급", "sortOrder": 3 }
+        { "id": "level_beginner", "label": "초보", "sortOrder": 1 },
+        { "id": "level_intermediate", "label": "중급", "sortOrder": 2 },
+        { "id": "level_advanced", "label": "고급", "sortOrder": 3 }
+      ]
+    },
+    {
+      "key": "workouts_per_week",
+      "title": "주당 운동일",
+      "description": "일주일에 몇 번 운동할 예정인가요?",
+      "selectionType": "single",
+      "sortOrder": 3,
+      "items": [
+        { "id": "workouts_1_2", "label": "주 1~2회", "sortOrder": 1 },
+        { "id": "workouts_3", "label": "주 3회", "sortOrder": 2 },
+        { "id": "workouts_4", "label": "주 4회", "sortOrder": 3 },
+        { "id": "workouts_5_plus", "label": "주 5회 이상", "sortOrder": 4 }
+      ]
+    },
+    {
+      "key": "session_minutes",
+      "title": "운동 시간",
+      "description": "한 번의 운동에 얼마나 시간을 쓰나요?",
+      "selectionType": "single",
+      "sortOrder": 4,
+      "items": [
+        { "id": "minutes_30", "label": "30분 내외", "sortOrder": 1 },
+        { "id": "minutes_45", "label": "45분 내외", "sortOrder": 2 },
+        { "id": "minutes_60", "label": "60분 내외", "sortOrder": 3 },
+        { "id": "minutes_90", "label": "90분 이상", "sortOrder": 4 }
+      ]
+    },
+    {
+      "key": "location",
+      "title": "운동 장소",
+      "description": "주로 어디에서 운동하나요?",
+      "selectionType": "single",
+      "sortOrder": 5,
+      "items": [
+        { "id": "location_gym", "label": "헬스장", "sortOrder": 1 },
+        { "id": "location_home", "label": "홈트", "sortOrder": 2 }
       ]
     },
     {
       "key": "equipment",
-      "title": "운동 장비",
-      "description": "운동 가능한 환경/장비를 알려주세요.",
-      "selectionType": "single",
-      "sortOrder": 3,
-      "items": [
-        { "id": "equip_home", "label": "집", "sortOrder": 1 },
-        { "id": "equip_gym", "label": "헬스장", "sortOrder": 2 },
-        { "id": "equip_dumbbell", "label": "덤벨", "sortOrder": 3 },
-        { "id": "equip_bodyweight", "label": "맨몸", "sortOrder": 4 }
-      ]
-    },
-    {
-      "key": "focus_area",
-      "title": "집중 부위",
-      "description": "이번에 집중하고 싶은 부위를 골라주세요.",
+      "title": "보유 장비",
+      "description": "사용 가능한 장비를 모두 선택해주세요.",
       "selectionType": "multi",
-      "sortOrder": 4,
+      "sortOrder": 6,
       "items": [
-        { "id": "focus_upper", "label": "상체", "sortOrder": 1 },
-        { "id": "focus_lower", "label": "하체", "sortOrder": 2 },
-        { "id": "focus_core", "label": "코어", "sortOrder": 3 },
-        { "id": "focus_cardio", "label": "유산소", "sortOrder": 4 }
+        { "id": "equip_barbell", "label": "바벨", "sortOrder": 1 },
+        { "id": "equip_dumbbell", "label": "덤벨", "sortOrder": 2 },
+        { "id": "equip_machine", "label": "머신", "sortOrder": 3 },
+        { "id": "equip_bodyweight", "label": "맨몸", "sortOrder": 4 }
       ]
     }
   ]

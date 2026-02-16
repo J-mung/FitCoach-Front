@@ -9,7 +9,13 @@ export type OnboardingOptionItem = {
 };
 
 export type OnboardingOptionGroup = {
-  key: "goal" | "experience" | "equipment" | "focus_area";
+  key:
+    | "goal"
+    | "level"
+    | "workouts_per_week"
+    | "session_minutes"
+    | "location"
+    | "equipment";
   title: string;
   description: string;
   selectionType: "single" | "multi";
@@ -23,7 +29,7 @@ export type OnboardingOptionsResponse = {
 
 // 온보딩 옵션 조회용 쿼리 키.
 // 옵션 구조 변경 시 버전을 올려 캐시를 무효화한다.
-const QUERY_KEY = ["onboarding-options", "v2"] as const;
+const QUERY_KEY = ["onboarding-options", "v3"] as const;
 
 const sortByOrder = <T extends { sortOrder: number }>(items: T[]) =>
   [...items].sort((a, b) => a.sortOrder - b.sortOrder);
