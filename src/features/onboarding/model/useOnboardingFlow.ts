@@ -2,6 +2,13 @@ import { useMemo, useState } from "react";
 import type { OnboardingOptionsResponse } from "@features/onboarding/api";
 import type { GroupMap, OnboardingFormState } from "./types";
 import { buildStepFlow, DEFAULT_GROUP_KEYS, TOTAL_STEPS } from "./constants";
+import {
+  canProceedStep,
+  mapGroupMap,
+  mapSelectSingle,
+  mapSetMulti,
+  mapToggleMulti,
+} from "./mappers";
 
 type UseOnboardingFlowParams = {
   data?: OnboardingOptionsResponse;
@@ -27,25 +34,15 @@ export function useOnboardingFlow({
   const totalSteps = stepFlow.length || TOTAL_STEPS;
   const activeStep = stepFlow[step] ?? stepFlow[0];
   const activeGroup =
-    activeStep.type === "group" ? groups.find((group) => group.key === activeStep.key) : null;
+    activeStep.type === "group"
+      ? groups.find((group) => group.key === activeStep.key) ?? null
+      : null;
 
   // CTA 상태 계산.
   const isFirstStep = step === 0;
   const isLastStep = step === totalSteps - 1;
   // 필수 입력이 없으면 다음/완료 버튼을 비활성화한다.
-  const canProceed =
-    activeStep.type === "welcome" ||
-    (activeStep.type === "group" &&
-      activeGroup &&
-      (() => {
-        const value = formState[activeGroup.key];
-        if (activeGroup.selectionType === "multi") {
-          return Array.isArray(value) && value.length > 0;
-        }
-        return typeof value === "string" && value.length > 0;
-      })()) ||
-    activeStep.type === "summary" ||
-    activeStep.type === "completion";
+  const canProceed = canProceedStep(activeStep, activeGroup, formState);
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
   const isCtaDisabled = isLoading || isError || !canProceed;
 
@@ -68,34 +65,22 @@ export function useOnboardingFlow({
 
   // 선택 상태 업데이트 유틸(단일/복수 선택).
   const handleSelectSingle = (key: string, value: string) => {
-    setFormState((prev) => ({ ...prev, [key]: value }));
+    setFormState((prev) => mapSelectSingle(prev, key, value));
   };
 
   const handleSetMulti = (key: string, values: string[]) => {
-    setFormState((prev) => ({ ...prev, [key]: values }));
+    setFormState((prev) => mapSetMulti(prev, key, values));
   };
 
   const handleToggleMulti = (key: string, value: string) => {
-    setFormState((prev) => {
-      // 복수 선택은 배열 기반으로 토글한다.
-      const current = prev[key];
-      const selected = Array.isArray(current) ? current : [];
-      const isSelected = selected.includes(value);
-      return {
-        ...prev,
-        [key]: isSelected ? selected.filter((item) => item !== value) : [...selected, value],
-      };
-    });
+    setFormState((prev) => mapToggleMulti(prev, key, value));
   };
 
   const groupMap = useMemo<GroupMap | null>(() => {
     if (!data) {
       return null;
     }
-    return data.groups.reduce<GroupMap>((acc, group) => {
-      acc[group.key] = group;
-      return acc;
-    }, {} as GroupMap);
+    return mapGroupMap(data.groups);
   }, [data]);
 
   return {

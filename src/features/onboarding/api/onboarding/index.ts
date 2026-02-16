@@ -4,3 +4,12 @@ export type {
   OnboardingOptionItem,
   OnboardingOptionsResponse,
 } from "./useOnboardingOptions";
+export type {
+  OnboardingAnswersDTO,
+  OnboardingGroupKey,
+  OnboardingOptionGroupDTO,
+  OnboardingOptionItemDTO,
+  OnboardingOptionsResponseDTO,
+  OnboardingSelectionType,
+} from "./dto";
+export { normalizeOnboardingOptions } from "./mappers";

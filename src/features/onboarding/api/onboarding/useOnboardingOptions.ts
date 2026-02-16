@@ -1,58 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
 import { useMockApi } from "@shared/lib";
 import { fetchJson } from "@shared/api";
+import type { OnboardingOptionsResponseDTO } from "./dto";
+import { normalizeOnboardingOptions } from "./mappers";
 
-export type OnboardingOptionItem = {
-  id: string;
-  label: string;
-  sortOrder: number;
-};
-
-export type OnboardingOptionGroup = {
-  key:
-    | "goal"
-    | "level"
-    | "workouts_per_week"
-    | "session_minutes"
-    | "location"
-    | "equipment";
-  title: string;
-  description: string;
-  selectionType: "single" | "multi";
-  sortOrder: number;
-  items: OnboardingOptionItem[];
-};
-
-export type OnboardingOptionsResponse = {
-  groups: OnboardingOptionGroup[];
-};
+export type OnboardingOptionsResponse = OnboardingOptionsResponseDTO;
+export type OnboardingOptionGroup = OnboardingOptionsResponse["groups"][number];
+export type OnboardingOptionItem = OnboardingOptionGroup["items"][number];
 
 // 온보딩 옵션 조회용 쿼리 키.
 // 옵션 구조 변경 시 버전을 올려 캐시를 무효화한다.
 const QUERY_KEY = ["onboarding-options", "v3"] as const;
 
-const sortByOrder = <T extends { sortOrder: number }>(items: T[]) =>
-  [...items].sort((a, b) => a.sortOrder - b.sortOrder);
-
-const normalizeOptions = (
-  data: OnboardingOptionsResponse
-): OnboardingOptionsResponse => ({
-  groups: sortByOrder(data.groups).map((group) => ({
-    ...group,
-    items: sortByOrder(group.items),
-  })),
-});
-
 // Mock JSON을 로드하여 옵션 데이터를 반환한다(서버 준비 전까지 사용).
 const fetchMockOnboardingOptions = async (): Promise<OnboardingOptionsResponse> => {
-  const data = require("./onboardingOptions.mock.json") as OnboardingOptionsResponse;
-  return normalizeOptions(data);
+  const data = require("./onboardingOptions.mock.json") as OnboardingOptionsResponseDTO;
+  return normalizeOnboardingOptions(data);
 };
 
 // 서버 API 호출(준비 완료 시 활성화).
 const fetchOnboardingOptions = async (): Promise<OnboardingOptionsResponse> => {
-  const data = await fetchJson<OnboardingOptionsResponse>("/onboarding/options");
-  return normalizeOptions(data);
+  const data = await fetchJson<OnboardingOptionsResponseDTO>("/onboarding/options");
+  return normalizeOnboardingOptions(data);
 };
 
 export function useOnboardingOptions() {
