@@ -4,7 +4,11 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useOnboardingStatus } from "@src/hooks";
-import { CoachScreen, HistoryScreen, HomeScreen, ProfileScreen, OnboardingScreen } from "@src/screens";
+import { CoachScreen } from "@pages/coach/CoachScreen";
+import { HistoryScreen } from "@pages/history/HistoryScreen";
+import { HomeScreen } from "@pages/home/HomeScreen";
+import { OnboardingScreen } from "@pages/onboarding/OnboardingScreen";
+import { ProfileScreen } from "@pages/profile/ProfileScreen";
 import { getTabBarStyle, tabBarLabelStyle } from "./styles";
 
 export type RootTabParamList = {
