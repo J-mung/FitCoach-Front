@@ -22,4 +22,5 @@ export const styles = {
     ghost: tailwind(tokens.color.textBrand),
   },
   disabled: tailwind(tokens.opacity.disabled),
+  pressed: tailwind(tokens.opacity.pressed),
 };

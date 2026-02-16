@@ -1,4 +1,5 @@
 import React from "react";
+import { ActivityIndicator, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -20,8 +21,20 @@ export function RootNavigator() {
   const insets = useSafeAreaInsets();
 
   if (!isReady) {
-    // 온보딩 상태 복원 중에는 렌더링을 보류.
-    return null;
+    // 온보딩 상태 복원 중에는 로딩 화면을 표시한다.
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "center",
+          paddingTop: insets.top,
+          paddingBottom: insets.bottom,
+        }}
+      >
+        <ActivityIndicator />
+      </View>
+    );
   }
 
   return (

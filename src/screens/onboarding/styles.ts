@@ -3,7 +3,7 @@ import { tokens } from "@src/styles";
 
 // 온보딩 화면 스타일: 토큰 기반으로 조합한다.
 export const styles = {
-  container: tailwind(`${tokens.layout.full} ${tokens.color.surface} ${tokens.spacing.screenTop}`),
+  container: tailwind(`${tokens.layout.full} ${tokens.color.surface}`),
   // 헤더/콘텐츠 좌우 패딩은 분리해서 관리한다.
   headerContent: tailwind(`${tokens.spacing.screenX} ${tokens.spacing.sectionGap}`),
   divider: tailwind(`h-[1px] ${tokens.color.border}`),

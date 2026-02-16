@@ -15,4 +15,5 @@ export const styles = {
     default: tailwind(tokens.color.textSecondary),
     selected: tailwind(`${tokens.color.textBrand} ${tokens.typography.weightSemibold}`),
   },
+  pressed: tailwind(tokens.opacity.pressed),
 };

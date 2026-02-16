@@ -14,4 +14,5 @@ export const styles = {
     `${tokens.typography.fontBase} ${tokens.typography.bodySm} ${tokens.color.textSecondary} ${tokens.spacing.listItemDescTop}`
   ),
   rightSpacing: tailwind(tokens.spacing.listItemRightGap),
+  pressed: tailwind(tokens.opacity.pressed),
 };

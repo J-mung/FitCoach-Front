@@ -19,16 +19,30 @@ export function ListItem({
   rightElement,
   containerStyle,
   style,
+  hitSlop,
+  accessibilityRole,
   ...props
 }: ListItemProps) {
+  const resolvedHitSlop = hitSlop ?? { top: 4, bottom: 4, left: 6, right: 6 };
+  const resolvedAccessibilityRole = accessibilityRole ?? "button";
   // Pressable은 상태 기반 스타일 함수를 지원한다.
   const resolveStyle = (state: PressableStateCallbackType) => {
     const resolvedStyle = typeof style === "function" ? style(state) : style;
-    return [listItemBaseStyle, containerStyle, resolvedStyle];
+    return [
+      listItemBaseStyle,
+      state.pressed ? styles.pressed : null,
+      containerStyle,
+      resolvedStyle,
+    ];
   };
 
   return (
-    <Pressable style={resolveStyle} {...props}>
+    <Pressable
+      style={resolveStyle}
+      hitSlop={resolvedHitSlop}
+      accessibilityRole={resolvedAccessibilityRole}
+      {...props}
+    >
       <View style={styles.content}>
         <Text style={listItemTitleStyle}>{title}</Text>
         {description ? (

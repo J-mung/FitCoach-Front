@@ -24,11 +24,15 @@ export function Button({
   loading = false,
   disabled,
   style,
+  hitSlop,
+  accessibilityRole,
   ...props
 }: ButtonProps) {
   // 로딩 중에는 비활성으로 처리하고 스피너를 표시한다.
   const isDisabled = disabled || loading;
   const spinnerColor = variant === "primary" ? primarySpinnerColor : secondarySpinnerColor;
+  const resolvedHitSlop = hitSlop ?? { top: 6, bottom: 6, left: 10, right: 10 };
+  const resolvedAccessibilityRole = accessibilityRole ?? "button";
   // Pressable 스타일은 상태 기반 style 함수도 지원한다.
   const resolveStyle = (state: PressableStateCallbackType) => {
     const resolvedStyle = typeof style === "function" ? style(state) : style;
@@ -36,13 +40,20 @@ export function Button({
       buttonBaseStyle,
       buttonSizeStyleMap[size],
       buttonVariantStyleMap[variant],
+      state.pressed && !isDisabled ? styles.pressed : null,
       isDisabled ? styles.disabled : null,
       resolvedStyle,
     ];
   };
 
   return (
-    <Pressable style={resolveStyle} disabled={isDisabled} {...props}>
+    <Pressable
+      style={resolveStyle}
+      disabled={isDisabled}
+      hitSlop={resolvedHitSlop}
+      accessibilityRole={resolvedAccessibilityRole}
+      {...props}
+    >
       {loading ? (
         <ActivityIndicator color={spinnerColor} />
       ) : (
