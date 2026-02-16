@@ -1,0 +1,9 @@
+{
+  "id": "session_mock_001",
+  "userId": "local-user",
+  "templateId": "template_upper_beginner",
+  "startedAt": "2026-02-16T09:00:00Z",
+  "endedAt": null,
+  "status": "started",
+  "totalVolume": null
+}

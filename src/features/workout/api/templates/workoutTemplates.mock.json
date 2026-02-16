@@ -1,0 +1,48 @@
+{
+  "templates": [
+    {
+      "id": "template_upper_beginner",
+      "name": "상체 기본 루틴",
+      "goalKey": "goal_bulk",
+      "levelKey": "level_beginner",
+      "exercises": [
+        {
+          "exerciseId": "bench_press",
+          "exerciseName": "벤치프레스",
+          "sets": 3,
+          "reps": "8-10",
+          "restSec": 90
+        },
+        {
+          "exerciseId": "lat_pulldown",
+          "exerciseName": "랫풀다운",
+          "sets": 3,
+          "reps": "10-12",
+          "restSec": 90
+        }
+      ]
+    },
+    {
+      "id": "template_fullbody_beginner",
+      "name": "전신 입문 루틴",
+      "goalKey": "goal_cut",
+      "levelKey": "level_beginner",
+      "exercises": [
+        {
+          "exerciseId": "goblet_squat",
+          "exerciseName": "고블렛 스쿼트",
+          "sets": 3,
+          "reps": "10-12",
+          "restSec": 75
+        },
+        {
+          "exerciseId": "push_up",
+          "exerciseName": "푸쉬업",
+          "sets": 3,
+          "reps": "8-12",
+          "restSec": 60
+        }
+      ]
+    }
+  ]
+}
