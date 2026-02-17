@@ -1,51 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { View } from "react-native";
 import { LayoutShell } from "@src/layout";
 import { Button, Input, Typography } from "@src/components";
 import { useProfile, useUpdateProfile } from "@features/profile/api";
-import { buildUpdateProfileDTO, mapProfileDtoToFormState } from "@features/profile/model";
+import { useProfileForm } from "@features/profile/model";
 import { styles } from "./styles";
 
 export function ProfileScreen() {
   const { data, isLoading, isError } = useProfile();
   const { mutateAsync: updateProfile, isPending: isSaving } = useUpdateProfile();
-  const [heightCm, setHeightCm] = useState("");
-  const [weightKg, setWeightKg] = useState("");
-  const [trainingYears, setTrainingYears] = useState("");
-  const [saveMessage, setSaveMessage] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!data) {
-      return;
-    }
-    // 조회한 DTO를 폼 상태로 변환해 입력값을 초기화한다.
-    const formState = mapProfileDtoToFormState(data);
-    setHeightCm(formState.heightCm);
-    setWeightKg(formState.weightKg);
-    setTrainingYears(formState.trainingYears);
-  }, [data]);
-
-  const handleSave = async () => {
-    if (!data?.userId) {
-      setSaveMessage("저장할 사용자 정보가 없습니다.");
-      return;
-    }
-    try {
-      // 저장 payload는 mapper를 통해서만 생성한다.
-      const payload = buildUpdateProfileDTO({
-        userId: data.userId,
-        formState: {
-          heightCm,
-          weightKg,
-          trainingYears,
-        },
-      });
+  const {
+    formState,
+    saveMessage,
+    setHeightCm,
+    setWeightKg,
+    setTrainingYears,
+    handleSave,
+  } = useProfileForm({
+    profile: data,
+    onSave: async (payload) => {
       await updateProfile(payload);
-      setSaveMessage("프로필이 저장되었습니다.");
-    } catch {
-      setSaveMessage("프로필 저장에 실패했습니다.");
-    }
-  };
+    },
+  });
 
   return (
     <LayoutShell title="Profile">
@@ -66,21 +42,21 @@ export function ProfileScreen() {
       <View style={styles.formGap}>
         <Input
           label="키(cm)"
-          value={heightCm}
+          value={formState.heightCm}
           keyboardType="numeric"
           onChangeText={setHeightCm}
           style={styles.fieldGap}
         />
         <Input
           label="체중(kg)"
-          value={weightKg}
+          value={formState.weightKg}
           keyboardType="numeric"
           onChangeText={setWeightKg}
           style={styles.fieldGap}
         />
         <Input
           label="운동 경력(년)"
-          value={trainingYears}
+          value={formState.trainingYears}
           keyboardType="numeric"
           onChangeText={setTrainingYears}
         />

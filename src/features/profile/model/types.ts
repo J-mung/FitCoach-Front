@@ -1,4 +1,5 @@
 import type { UpdateUserProfileDTO } from "@features/profile/api";
+import type { UserProfileDTO } from "@features/profile/api";
 
 export type ProfileFormState = {
   heightCm: string;
@@ -21,3 +22,20 @@ export type BuildUpdateProfileParams = {
 };
 
 export type BuildUpdateProfileResult = UpdateUserProfileDTO;
+
+export type ProfileSaveStatus = "idle" | "saving" | "success" | "error";
+
+export type UseProfileFormParams = {
+  profile: UserProfileDTO | undefined;
+  onSave: (payload: UpdateUserProfileDTO) => Promise<void>;
+};
+
+export type UseProfileFormResult = {
+  formState: ProfileFormState;
+  saveStatus: ProfileSaveStatus;
+  saveMessage: string | null;
+  setHeightCm: (value: string) => void;
+  setWeightKg: (value: string) => void;
+  setTrainingYears: (value: string) => void;
+  handleSave: () => Promise<void>;
+};
