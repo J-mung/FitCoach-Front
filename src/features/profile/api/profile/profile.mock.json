@@ -3,5 +3,13 @@
   "heightCm": 174,
   "weightKg": 72,
   "trainingYears": 2,
+  "onboardingAnswers": {
+    "goal": "goal_bulk",
+    "level": "level_beginner",
+    "workouts_per_week": "workouts_3",
+    "session_minutes": "minutes_45",
+    "location": "location_gym",
+    "equipment": ["equip_barbell", "equip_dumbbell"]
+  },
   "updatedAt": "2026-02-16T00:00:00Z"
 }

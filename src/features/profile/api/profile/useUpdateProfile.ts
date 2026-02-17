@@ -42,6 +42,7 @@ export function useUpdateProfile() {
           heightCm: null,
           weightKg: null,
           trainingYears: null,
+          onboardingAnswers: {},
           updatedAt: new Date().toISOString(),
         });
       return applyUpdate(base, payload);

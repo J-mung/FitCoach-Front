@@ -3,6 +3,7 @@ export type UserProfileDTO = {
   heightCm: number | null;
   weightKg: number | null;
   trainingYears: number | null;
+  onboardingAnswers: Record<string, string | string[] | null>;
   updatedAt: string;
 };
 
@@ -11,4 +12,5 @@ export type UpdateUserProfileDTO = {
   heightCm?: number | null;
   weightKg?: number | null;
   trainingYears?: number | null;
+  onboardingAnswers?: Record<string, string | string[] | null>;
 };

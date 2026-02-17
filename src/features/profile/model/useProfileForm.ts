@@ -30,6 +30,7 @@ const INITIAL_FORM_STATE: ProfileFormState = {
   heightCm: "",
   weightKg: "",
   trainingYears: "",
+  onboardingAnswers: {},
 };
 
 export function useProfileForm({
@@ -73,6 +74,39 @@ export function useProfileForm({
     }
   };
 
+  const setOnboardingSingle = (key: string, value: string) => {
+    setFormState((prev) => ({
+      ...prev,
+      onboardingAnswers: {
+        ...prev.onboardingAnswers,
+        [key]: value,
+      },
+    }));
+    if (saveStatus !== "saving") {
+      setSaveStatus("idle");
+    }
+  };
+
+  const toggleOnboardingMulti = (key: string, value: string) => {
+    setFormState((prev) => {
+      const current = prev.onboardingAnswers[key];
+      const selected = Array.isArray(current) ? current : [];
+      const next = selected.includes(value)
+        ? selected.filter((item) => item !== value)
+        : [...selected, value];
+      return {
+        ...prev,
+        onboardingAnswers: {
+          ...prev.onboardingAnswers,
+          [key]: next,
+        },
+      };
+    });
+    if (saveStatus !== "saving") {
+      setSaveStatus("idle");
+    }
+  };
+
   const handleSave = async () => {
     if (isSaveDisabled) {
       setSaveStatus("error");
@@ -101,6 +135,8 @@ export function useProfileForm({
     setHeightCm,
     setWeightKg,
     setTrainingYears,
+    setOnboardingSingle,
+    toggleOnboardingMulti,
     handleSave,
   };
 }

@@ -22,6 +22,7 @@ export const mapProfileDtoToFormState = (profile: UserProfileDTO): ProfileFormSt
   heightCm: profile.heightCm ? String(profile.heightCm) : "",
   weightKg: profile.weightKg ? String(profile.weightKg) : "",
   trainingYears: profile.trainingYears ? String(profile.trainingYears) : "",
+  onboardingAnswers: profile.onboardingAnswers ?? {},
 });
 
 // DTO를 화면 표시용 요약으로 변환한다.
@@ -51,4 +52,5 @@ export const buildUpdateProfileDTO = ({
   heightCm: normalizeNumberInput(formState.heightCm),
   weightKg: normalizeNumberInput(formState.weightKg),
   trainingYears: normalizeNumberInput(formState.trainingYears),
+  onboardingAnswers: formState.onboardingAnswers,
 });

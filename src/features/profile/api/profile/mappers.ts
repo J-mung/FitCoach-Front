@@ -13,5 +13,6 @@ export const normalizeUserProfile = (data: UserProfileDTO): UserProfileDTO => ({
   heightCm: normalizeNullableNumber(data.heightCm),
   weightKg: normalizeNullableNumber(data.weightKg),
   trainingYears: normalizeNullableNumber(data.trainingYears),
+  onboardingAnswers: data.onboardingAnswers ?? {},
   updatedAt: data.updatedAt,
 });

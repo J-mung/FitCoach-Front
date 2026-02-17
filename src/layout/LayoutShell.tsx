@@ -6,8 +6,14 @@ import { NAV_BAR_HEIGHT, TAB_BAR_HEIGHT } from "./constants";
 import { styles } from "./styles";
 import type { LayoutShellProps } from "./types";
 
-export function LayoutShell({ title, children }: LayoutShellProps) {
+export function LayoutShell({
+  title,
+  children,
+  contentBottomInset = "tab",
+}: LayoutShellProps) {
   const safeAreaInsets = useSafeAreaInsets();
+  const contentPaddingBottom =
+    contentBottomInset === "tab" ? TAB_BAR_HEIGHT + safeAreaInsets.bottom : 0;
 
   return (
     <View style={styles.shell}>
@@ -17,7 +23,7 @@ export function LayoutShell({ title, children }: LayoutShellProps) {
       <View
         style={[
           styles.content,
-          { paddingBottom: TAB_BAR_HEIGHT + safeAreaInsets.bottom },
+          { paddingBottom: contentPaddingBottom },
         ]}
       >
         {children}

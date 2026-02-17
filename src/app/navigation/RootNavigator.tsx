@@ -11,7 +11,7 @@ import { HomeScreen } from "@pages/home/HomeScreen";
 import { OnboardingScreen } from "@pages/onboarding/OnboardingScreen";
 import { ProfileScreen } from "@pages/profile/ProfileScreen";
 import { getTabBarStyle, tabBarLabelStyle } from "./styles";
-import { GATE_ROUTE_MAP, resolveAppGateState } from "./gate";
+import { resolveAppGateState } from "./gate";
 
 export type RootTabParamList = {
   Home: undefined;
@@ -70,15 +70,17 @@ export function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        key={gate}
-        screenOptions={{ headerShown: false }}
-        initialRouteName={GATE_ROUTE_MAP[gate]}
-      >
-        <Stack.Screen name="MainTabs" component={MainTabs} />
-        {/* 온보딩 완료 전에는 단일 화면 플로우로 진입 */}
-        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-      </Stack.Navigator>
+      {gate === "main-tabs" ? (
+        // 완료 상태에서는 메인 탭만 렌더해 즉시 전환을 보장한다.
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="MainTabs" component={MainTabs} />
+        </Stack.Navigator>
+      ) : (
+        // 미완료 상태에서는 온보딩 화면만 렌더한다.
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
+        </Stack.Navigator>
+      )}
     </NavigationContainer>
   );
 }
