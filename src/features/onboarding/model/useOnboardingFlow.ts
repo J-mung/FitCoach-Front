@@ -1,7 +1,12 @@
 import { useMemo, useState } from "react";
 import type { OnboardingOptionsResponse } from "@features/onboarding/api";
 import type { GroupMap, OnboardingFormState } from "./types";
-import { buildStepFlow, DEFAULT_GROUP_KEYS, TOTAL_STEPS } from "./constants";
+import {
+  buildStepFlow,
+  DEFAULT_GROUP_KEYS,
+  SUMMARY_PRIMARY_GROUP_KEY,
+  TOTAL_STEPS,
+} from "./constants";
 import {
   canProceedStep,
   mapGroupMap,
@@ -43,8 +48,13 @@ export function useOnboardingFlow({
   const isLastStep = step === totalSteps - 1;
   // 필수 입력이 없으면 다음/완료 버튼을 비활성화한다.
   const canProceed = canProceedStep(activeStep, activeGroup, formState);
+  // 요약 단계에서는 주간 운동 횟수 선택 완료 여부를 함께 확인한다.
+  const canProceedSummary =
+    activeStep.type !== "summary"
+      ? true
+      : typeof formState[SUMMARY_PRIMARY_GROUP_KEY] === "string";
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
-  const isCtaDisabled = isLoading || isError || !canProceed;
+  const isCtaDisabled = isLoading || isError || !canProceed || !canProceedSummary;
 
   // 다음 단계로 이동하거나 마지막 단계에서 완료 처리한다.
   const handleNext = () => {

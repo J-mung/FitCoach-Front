@@ -28,7 +28,10 @@ const renderWelcomeStep: StepRenderer = () => <WelcomeStep />;
 
 // 그룹 단계는 선택 타입(single/multi)에 따라 전달값을 안전하게 변환한다.
 const renderGroupStep: StepRenderer = ({
+  activeStep,
   activeGroup,
+  groupMap,
+  groups,
   formState,
   handleSelectSingle,
   handleToggleMulti,
@@ -50,14 +53,22 @@ const renderGroupStep: StepRenderer = ({
           ? (formState[activeGroup.key] as string[])
           : []
       }
+      stepKey={activeStep.type === "group" ? activeStep.key : null}
+      groupMap={groupMap}
+      locationSelectedId={
+        typeof formState.location === "string" ? (formState.location as string) : null
+      }
       onSelectSingle={(id) => handleSelectSingle(activeGroup.key, id)}
       onToggleMulti={(id) => handleToggleMulti(activeGroup.key, id)}
+      onSelectSingleByKey={handleSelectSingle}
+      onToggleMultiByKey={handleToggleMulti}
     />
   );
 };
 
 // 요약 단계는 groupMap 준비 여부를 확인한 뒤에만 렌더한다.
 const renderSummaryStep: StepRenderer = ({
+  activeStep,
   groupMap,
   groups,
   formState,
@@ -70,7 +81,6 @@ const renderSummaryStep: StepRenderer = ({
 
   return (
     <SummaryStep
-      groups={groups}
       groupMap={groupMap}
       formState={formState}
       onSelectSingle={handleSelectSingle}

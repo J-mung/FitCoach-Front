@@ -1,109 +1,116 @@
-import React, { useEffect, useState } from "react";
-import { View } from "react-native";
-import { Button, Chip, Typography } from "@src/components";
+import React, { useEffect, useMemo, useState } from "react";
+import { Pressable, View } from "react-native";
+import { Button, Typography } from "@src/components";
 import type { GroupMap, OnboardingFormState } from "@features/onboarding/model";
 import type { OnboardingOptionGroup } from "@features/onboarding/api";
 import { styles } from "../styles";
 
 type SummaryStepProps = {
-  groups: OnboardingOptionGroup[];
   groupMap: GroupMap;
   formState: OnboardingFormState;
   onSelectSingle: (key: keyof GroupMap, id: string) => void;
   onSetMulti: (key: keyof GroupMap, ids: string[]) => void;
 };
 
-// 선택 결과 요약 단계.
+const SUMMARY_GROUP_KEYS = ["goal", "level", "location", "equipment"] as const;
+const SCHEDULE_GROUP_KEY = "workouts_per_week" as const;
+
+// 최종 요약 단계: 주간 빈도 선택 + 선택 결과 요약/수정.
 export function SummaryStep({
-  groups,
   groupMap,
   formState,
   onSelectSingle,
   onSetMulti,
 }: SummaryStepProps) {
-  // 요약 화면에서 열려 있는 수정 섹션 키.
   const [expandedKey, setExpandedKey] = useState<keyof GroupMap | null>(null);
-  // 다중 선택은 임시 상태로 보관 후 완료 버튼에서 반영한다.
   const [pendingMultiMap, setPendingMultiMap] = useState<Record<string, string[]>>({});
+
+  const scheduleGroup = groupMap[SCHEDULE_GROUP_KEY];
+  const summaryGroups = useMemo(
+    () =>
+      SUMMARY_GROUP_KEYS.map((key) => groupMap[key]).filter(
+        (group): group is OnboardingOptionGroup => Boolean(group)
+      ),
+    [groupMap]
+  );
 
   useEffect(() => {
     if (!expandedKey) {
       return;
     }
-    const group = groupMap[expandedKey];
-    if (!group || group.selectionType !== "multi") {
+    const value = formState[expandedKey];
+    if (!Array.isArray(value)) {
       return;
     }
-    const value = formState[group.key];
-    const nextValue = Array.isArray(value) ? value : [];
-    setPendingMultiMap((prev) => ({ ...prev, [group.key]: nextValue }));
-  }, [expandedKey, formState, groupMap]);
+    setPendingMultiMap((prev) => ({ ...prev, [expandedKey]: value }));
+  }, [expandedKey, formState]);
 
   const resolveLabel = (groupKey: keyof GroupMap, id: string | null) =>
     groupMap[groupKey]?.items.find((item) => item.id === id)?.label ?? "-";
 
-  const resolveMulti = (groupKey: keyof GroupMap, ids: string[]) =>
-    ids
+  const resolveMulti = (groupKey: keyof GroupMap, ids: string[]) => {
+    const labels = ids
       .map((id) => groupMap[groupKey]?.items.find((item) => item.id === id)?.label)
-      .filter(Boolean)
-      .join(", ") || "-";
-
-  const resolveSingleId = (groupKey: keyof GroupMap) => {
-    const value = formState[groupKey];
-    return typeof value === "string" ? value : null;
+      .filter(Boolean);
+    return labels.length > 0 ? labels.join(", ") : "-";
   };
 
-  const handleToggleExpanded = (groupKey: keyof GroupMap) => {
-    setExpandedKey((prev) => (prev === groupKey ? null : groupKey));
-  };
-
-  const renderEditOptions = (groupKey: keyof GroupMap) => {
-    const group = groupMap[groupKey];
-    if (!group) {
-      return null;
+  const resolveSummaryValue = (group: OnboardingOptionGroup) => {
+    const value = formState[group.key];
+    if (group.selectionType === "multi") {
+      return resolveMulti(group.key, Array.isArray(value) ? value : []);
     }
+    return resolveLabel(group.key, typeof value === "string" ? value : null);
+  };
+
+  const renderEditSection = (group: OnboardingOptionGroup) => {
     const isMulti = group.selectionType === "multi";
-    const selectedSingleId = resolveSingleId(groupKey);
-    const selectedMultiIds = pendingMultiMap[groupKey] ?? [];
+    const selectedSingleId =
+      typeof formState[group.key] === "string" ? (formState[group.key] as string) : null;
+    const selectedMultiIds = pendingMultiMap[group.key] ?? [];
 
     return (
-      <View style={styles.summaryEditBlock}>
-        <View style={styles.choiceWrap}>
-          {group.items.map((option) => {
+      <View style={styles.summaryEditBox}>
+        <View style={styles.summaryEditOptionWrap}>
+          {group.items.map((item) => {
             const isSelected = isMulti
-              ? selectedMultiIds.includes(option.id)
-              : selectedSingleId === option.id;
+              ? selectedMultiIds.includes(item.id)
+              : selectedSingleId === item.id;
             return (
-              <View key={option.id} style={styles.chipItem}>
-                <Chip
-                  label={option.label}
-                  variant={isSelected ? "selected" : "default"}
-                  onPress={() => {
-                    if (isMulti) {
-                      setPendingMultiMap((prev) => {
-                        const current = prev[groupKey] ?? [];
-                        const next = current.includes(option.id)
-                          ? current.filter((item) => item !== option.id)
-                          : [...current, option.id];
-                        return { ...prev, [groupKey]: next };
-                      });
-                      return;
-                    }
-                    onSelectSingle(groupKey, option.id);
-                  }}
-                />
-              </View>
+              <Pressable
+                key={item.id}
+                style={[styles.summaryEditOption, isSelected ? styles.optionCardSelected : null]}
+                onPress={() => {
+                  if (!isMulti) {
+                    onSelectSingle(group.key, item.id);
+                    return;
+                  }
+                  setPendingMultiMap((prev) => {
+                    const current = prev[group.key] ?? [];
+                    const next = current.includes(item.id)
+                      ? current.filter((target) => target !== item.id)
+                      : [...current, item.id];
+                    return { ...prev, [group.key]: next };
+                  });
+                }}
+              >
+                <Typography
+                  variant="bodyMd"
+                  style={isSelected ? styles.optionTitleSelected : styles.optionTitle}
+                >
+                  {item.label}
+                </Typography>
+              </Pressable>
             );
           })}
         </View>
-        <View style={styles.summaryEditActions}>
+        <View style={styles.summaryEditActionRow}>
           <Button
-            title="완료"
+            title="수정 완료"
             variant="secondary"
-            size="md"
             onPress={() => {
               if (isMulti) {
-                onSetMulti(groupKey, pendingMultiMap[groupKey] ?? []);
+                onSetMulti(group.key, pendingMultiMap[group.key] ?? []);
               }
               setExpandedKey(null);
             }}
@@ -115,35 +122,62 @@ export function SummaryStep({
 
   return (
     <View>
-      <Typography variant="titleMd">선택 결과 요약</Typography>
-      <Typography variant="bodyMd" tone="secondary" style={styles.contentGap}>
-        필요하면 수정할 수 있어요.
+      {scheduleGroup ? (
+        <View style={styles.summaryScheduleSection}>
+          <Typography variant="titleLg">일주일에 얼마나 운동하고 싶나요?</Typography>
+          <View style={styles.optionList}>
+            {scheduleGroup.items.map((item) => {
+              const selectedId =
+                typeof formState[scheduleGroup.key] === "string"
+                  ? (formState[scheduleGroup.key] as string)
+                  : null;
+              const isSelected = selectedId === item.id;
+              return (
+                <Pressable
+                  key={item.id}
+                  style={[styles.optionCard, isSelected ? styles.optionCardSelected : null]}
+                  onPress={() => onSelectSingle(scheduleGroup.key, item.id)}
+                >
+                  <Typography
+                    variant="titleMd"
+                    style={isSelected ? styles.optionTitleSelected : styles.optionTitle}
+                  >
+                    {item.label}
+                  </Typography>
+                  <View style={[styles.radioOuter, isSelected ? styles.radioOuterSelected : null]}>
+                    {isSelected ? <View style={styles.radioInner} /> : null}
+                  </View>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+      ) : null}
+
+      <Typography variant="titleLg" style={styles.summaryPlanTitle}>
+        선택 요약
       </Typography>
-
-      {groups.map((group) => {
-        const value = formState[group.key];
-        const summaryValue =
-          group.selectionType === "multi"
-            ? resolveMulti(group.key, Array.isArray(value) ? value : [])
-            : resolveLabel(group.key, typeof value === "string" ? value : null);
-
-        return (
-          <View key={group.key}>
-            <View style={styles.summaryRow}>
-              <Typography variant="bodySm" tone="secondary" style={styles.summaryLabel}>
+      <View style={styles.summaryPlanCard}>
+        {summaryGroups.map((group) => (
+          <View key={group.key} style={styles.summaryPlanRow}>
+            <View style={styles.summaryPlanTextBlock}>
+              <Typography variant="bodySm" tone="secondary">
                 {group.title}
               </Typography>
-              <Typography variant="bodyMd">{summaryValue}</Typography>
-              <Button
-                title="수정"
-                variant="ghost"
-                onPress={() => handleToggleExpanded(group.key)}
-              />
+              <Typography variant="titleMd" style={styles.summaryPlanValue}>
+                {resolveSummaryValue(group)}
+              </Typography>
             </View>
-            {expandedKey === group.key ? renderEditOptions(group.key) : null}
+            <Button
+              title={expandedKey === group.key ? "접기" : "수정"}
+              variant="ghost"
+              size="md"
+              onPress={() => setExpandedKey((prev) => (prev === group.key ? null : group.key))}
+            />
+            {expandedKey === group.key ? renderEditSection(group) : null}
           </View>
-        );
-      })}
+        ))}
+      </View>
     </View>
   );
 }

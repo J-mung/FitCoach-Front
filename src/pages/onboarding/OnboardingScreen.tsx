@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { ScrollView, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Typography } from "@src/components";
@@ -29,7 +29,6 @@ export function OnboardingScreen() {
     groupMap,
     groups,
     isFirstStep,
-    isLastStep,
     isCtaDisabled,
     handleNext,
     handlePrev,
@@ -42,7 +41,10 @@ export function OnboardingScreen() {
     isError,
     onComplete: () => void setCompleted(true),
   });
-  const progress = useOnboardingProgress({ step, totalSteps });
+  const progress = useOnboardingProgress({
+    step: Math.min(step, Math.max(totalSteps - 2, 0)),
+    totalSteps: Math.max(totalSteps - 1, 1),
+  });
   const panHandlers = useOnboardingSwipe({ onNext: handleNext, onPrev: handlePrev });
   // iOS 홈 인디케이터 영역을 고려해 CTA 여백을 보강한다.
   const footerSafeAreaStyle = {
@@ -59,6 +61,17 @@ export function OnboardingScreen() {
     handleToggleMulti,
   });
 
+  useEffect(() => {
+    if (activeStep.type !== "completion") {
+      return;
+    }
+    // 완료 전환 화면은 짧게 노출한 뒤 메인으로 이동한다.
+    const timer = setTimeout(() => {
+      void setCompleted(true);
+    }, 1200);
+    return () => clearTimeout(timer);
+  }, [activeStep.type, setCompleted]);
+
   return (
     <SafeAreaView
       style={[
@@ -71,9 +84,15 @@ export function OnboardingScreen() {
       edges={["left", "right"]}
       {...panHandlers}
     >
-      <OnboardingHeader progress={progress} />
+      <OnboardingHeader
+        activeStep={activeStep}
+        step={step}
+        totalSteps={totalSteps}
+        progress={progress}
+        onPrev={handlePrev}
+        onSkip={() => void setCompleted(true)}
+      />
 
-      {/* 단계별 콘텐츠 영역 */}
       <View style={styles.contentContainer}>
         <View style={styles.body}>
           {isLoading ? (
@@ -94,13 +113,13 @@ export function OnboardingScreen() {
               {stepContent}
             </ScrollView>
           ) : (
-            stepContent
+            <View style={styles.stepContent}>{stepContent}</View>
           )}
         </View>
 
         <OnboardingFooter
+          activeStep={activeStep}
           isFirstStep={isFirstStep}
-          isLastStep={isLastStep}
           isCtaDisabled={isCtaDisabled}
           onPrev={handlePrev}
           onNext={handleNext}
