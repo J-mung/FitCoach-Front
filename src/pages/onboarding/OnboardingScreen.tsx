@@ -7,10 +7,7 @@ import { useOnboardingOptions } from "@features/onboarding/api";
 import { OnboardingFooter } from "./OnboardingFooter";
 import { OnboardingHeader } from "./OnboardingHeader";
 import { styles } from "./styles";
-import { CompletionStep } from "./steps/CompletionStep";
-import { GroupStep } from "./steps/GroupStep";
-import { SummaryStep } from "./steps/SummaryStep";
-import { WelcomeStep } from "./steps/WelcomeStep";
+import { renderOnboardingStep } from "./stepRenderers";
 import {
   useOnboardingFlow,
   useOnboardingProgress,
@@ -78,45 +75,16 @@ export function OnboardingScreen() {
               옵션을 불러오지 못했습니다.
             </Typography>
           ) : (
-            <>
-              {activeStep.type === "welcome" ? <WelcomeStep /> : null}
-
-              {activeStep.type === "group" ? (
-                activeGroup ? (
-                  <GroupStep
-                    group={activeGroup}
-                    selectedSingleId={
-                      typeof formState[activeGroup.key] === "string"
-                        ? (formState[activeGroup.key] as string)
-                        : null
-                    }
-                    selectedMultiIds={
-                      Array.isArray(formState[activeGroup.key])
-                        ? (formState[activeGroup.key] as string[])
-                        : []
-                    }
-                    onSelectSingle={(id) => handleSelectSingle(activeGroup.key, id)}
-                    onToggleMulti={(id) => handleToggleMulti(activeGroup.key, id)}
-                  />
-                ) : (
-                  <Typography variant="bodySm" tone="secondary">
-                    옵션이 준비되지 않았습니다.
-                  </Typography>
-                )
-              ) : null}
-
-              {activeStep.type === "summary" && groupMap ? (
-                <SummaryStep
-                  groups={groups}
-                  groupMap={groupMap}
-                  formState={formState}
-                  onSelectSingle={handleSelectSingle}
-                  onSetMulti={handleSetMulti}
-                />
-              ) : null}
-
-              {activeStep.type === "completion" ? <CompletionStep /> : null}
-            </>
+            renderOnboardingStep({
+              activeStep,
+              activeGroup,
+              groupMap,
+              groups,
+              formState,
+              handleSelectSingle,
+              handleSetMulti,
+              handleToggleMulti,
+            })
           )}
         </View>
 
