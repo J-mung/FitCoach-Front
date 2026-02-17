@@ -11,6 +11,7 @@ import { HomeScreen } from "@pages/home/HomeScreen";
 import { OnboardingScreen } from "@pages/onboarding/OnboardingScreen";
 import { ProfileScreen } from "@pages/profile/ProfileScreen";
 import { getTabBarStyle, tabBarLabelStyle } from "./styles";
+import { GATE_ROUTE_MAP, resolveAppGateState } from "./gate";
 
 export type RootTabParamList = {
   Home: undefined;
@@ -48,8 +49,9 @@ function MainTabs() {
 export function RootNavigator() {
   const { isReady, isCompleted } = useOnboardingStatus();
   const insets = useSafeAreaInsets();
+  const gate = resolveAppGateState({ isReady, isCompleted });
 
-  if (!isReady) {
+  if (gate === "booting") {
     // 온보딩 상태 복원 중에는 로딩 화면을 표시한다.
     return (
       <View
@@ -68,13 +70,14 @@ export function RootNavigator() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {isCompleted ? (
-          <Stack.Screen name="MainTabs" component={MainTabs} />
-        ) : (
-          // 온보딩 완료 전에는 단일 화면 플로우로 진입.
-          <Stack.Screen name="Onboarding" component={OnboardingScreen} />
-        )}
+      <Stack.Navigator
+        key={gate}
+        screenOptions={{ headerShown: false }}
+        initialRouteName={GATE_ROUTE_MAP[gate]}
+      >
+        <Stack.Screen name="MainTabs" component={MainTabs} />
+        {/* 온보딩 완료 전에는 단일 화면 플로우로 진입 */}
+        <Stack.Screen name="Onboarding" component={OnboardingScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
