@@ -2,30 +2,6 @@ import { useEffect, useState } from "react";
 import { buildUpdateProfileDTO, mapProfileDtoToFormState } from "./mappers";
 import type { ProfileFormState, UseProfileFormParams, UseProfileFormResult } from "./types";
 
-// 저장 상태별 UI 표현 정책을 단일 맵으로 관리한다.
-const STATUS_VIEW_MAP = {
-  idle: {
-    visible: false,
-    message: "",
-    tone: "secondary",
-  },
-  saving: {
-    visible: true,
-    message: "저장 중입니다.",
-    tone: "secondary",
-  },
-  success: {
-    visible: true,
-    message: "프로필이 저장되었습니다.",
-    tone: "primary",
-  },
-  error: {
-    visible: true,
-    message: "프로필 저장에 실패했습니다.",
-    tone: "secondary",
-  },
-} as const;
-
 const INITIAL_FORM_STATE: ProfileFormState = {
   heightCm: "",
   weightKg: "",
@@ -131,7 +107,6 @@ export function useProfileForm({
     formState,
     saveStatus,
     isSaveDisabled,
-    statusView: STATUS_VIEW_MAP[saveStatus],
     setHeightCm,
     setWeightKg,
     setTrainingYears,

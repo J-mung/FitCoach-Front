@@ -13,5 +13,4 @@ export const styles = {
   choiceWrap: tailwind(`${tokens.layout.rowCenter} flex-wrap ${tokens.spacing.choiceTop}`),
   chipItem: tailwind(tokens.spacing.chipGap),
   saveButtonWrap: tailwind(tokens.spacing.sectionGap),
-  statusText: tailwind(tokens.spacing.contentGap),
 };

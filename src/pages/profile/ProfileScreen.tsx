@@ -1,22 +1,24 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { ScrollView, View } from "react-native";
 import { LayoutShell } from "@src/layout";
 import { Button, Chip, Input, Typography } from "@src/components";
 import { useProfile, useUpdateProfile } from "@features/profile/api";
 import { useOnboardingOptions } from "@features/onboarding/api";
 import { useProfileForm } from "@features/profile/model";
+import { useToast } from "@shared/ui";
 import { styles } from "./styles";
 
 export function ProfileScreen() {
   const { data, isLoading, isError } = useProfile();
   const { data: optionsData, isLoading: isOptionsLoading } = useOnboardingOptions();
   const { mutateAsync: updateProfile } = useUpdateProfile();
+  const { showToast } = useToast();
+  const prevSaveStatus = useRef<"idle" | "saving" | "success" | "error">("idle");
   // 화면은 폼 상태/저장 정책을 훅에서 받아 바인딩만 수행한다.
   const {
     formState,
     isSaveDisabled,
     saveStatus,
-    statusView,
     setHeightCm,
     setWeightKg,
     setTrainingYears,
@@ -29,6 +31,19 @@ export function ProfileScreen() {
       await updateProfile(payload);
     },
   });
+
+  useEffect(() => {
+    // 상태 전이 시점에만 토스트를 1회 노출한다.
+    if (prevSaveStatus.current !== saveStatus) {
+      if (saveStatus === "success") {
+        showToast({ type: "success", message: "프로필이 저장되었습니다." });
+      }
+      if (saveStatus === "error") {
+        showToast({ type: "error", message: "프로필 저장에 실패했습니다." });
+      }
+      prevSaveStatus.current = saveStatus;
+    }
+  }, [saveStatus, showToast]);
 
   return (
     <LayoutShell title="Profile" contentBottomInset="none">
@@ -124,11 +139,6 @@ export function ProfileScreen() {
             onPress={() => void handleSave()}
           />
         </View>
-        {statusView.visible ? (
-          <Typography variant="bodySm" tone={statusView.tone} style={styles.statusText}>
-            {statusView.message}
-          </Typography>
-        ) : null}
       </ScrollView>
     </LayoutShell>
   );
