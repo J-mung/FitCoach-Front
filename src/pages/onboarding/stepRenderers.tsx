@@ -1,5 +1,4 @@
 import React from "react";
-import { Typography } from "@src/components";
 import type {
   GroupMap,
   OnboardingFormState,
@@ -10,6 +9,7 @@ import { CompletionStep } from "./steps/CompletionStep";
 import { GroupStep } from "./steps/GroupStep";
 import { SummaryStep } from "./steps/SummaryStep";
 import { WelcomeStep } from "./steps/WelcomeStep";
+import { OnboardingFallback } from "./OnboardingFallback";
 
 type StepRenderContext = {
   activeStep: StepConfig;
@@ -33,11 +33,7 @@ const renderGroupStep: StepRenderer = ({
   handleToggleMulti,
 }) => {
   if (!activeGroup) {
-    return (
-      <Typography variant="bodySm" tone="secondary">
-        옵션이 준비되지 않았습니다.
-      </Typography>
-    );
+    return <OnboardingFallback />;
   }
 
   return (
@@ -67,11 +63,7 @@ const renderSummaryStep: StepRenderer = ({
   handleSetMulti,
 }) => {
   if (!groupMap) {
-    return (
-      <Typography variant="bodySm" tone="secondary">
-        옵션이 준비되지 않았습니다.
-      </Typography>
-    );
+    return <OnboardingFallback />;
   }
 
   return (
