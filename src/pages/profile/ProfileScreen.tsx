@@ -8,10 +8,12 @@ import { styles } from "./styles";
 
 export function ProfileScreen() {
   const { data, isLoading, isError } = useProfile();
-  const { mutateAsync: updateProfile, isPending: isSaving } = useUpdateProfile();
+  const { mutateAsync: updateProfile } = useUpdateProfile();
   const {
     formState,
-    saveMessage,
+    isSaveDisabled,
+    saveStatus,
+    statusView,
     setHeightCm,
     setWeightKg,
     setTrainingYears,
@@ -62,11 +64,16 @@ export function ProfileScreen() {
         />
       </View>
       <View style={styles.saveButtonWrap}>
-        <Button title="저장" loading={isSaving} onPress={() => void handleSave()} />
+        <Button
+          title="저장"
+          loading={saveStatus === "saving"}
+          disabled={isSaveDisabled}
+          onPress={() => void handleSave()}
+        />
       </View>
-      {saveMessage ? (
-        <Typography variant="bodySm" tone="secondary" style={styles.statusText}>
-          {saveMessage}
+      {statusView.visible ? (
+        <Typography variant="bodySm" tone={statusView.tone} style={styles.statusText}>
+          {statusView.message}
         </Typography>
       ) : null}
     </LayoutShell>

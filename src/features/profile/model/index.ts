@@ -9,6 +9,7 @@ export type {
   BuildUpdateProfileResult,
   ProfileFormState,
   ProfileSaveStatus,
+  ProfileStatusView,
   ProfileSummary,
   ProfileSummaryItem,
   UseProfileFormParams,
