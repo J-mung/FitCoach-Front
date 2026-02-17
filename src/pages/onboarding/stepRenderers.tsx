@@ -26,6 +26,7 @@ type StepRenderer = (context: StepRenderContext) => React.ReactNode;
 
 const renderWelcomeStep: StepRenderer = () => <WelcomeStep />;
 
+// 그룹 단계는 선택 타입(single/multi)에 따라 전달값을 안전하게 변환한다.
 const renderGroupStep: StepRenderer = ({
   activeGroup,
   formState,
@@ -55,6 +56,7 @@ const renderGroupStep: StepRenderer = ({
   );
 };
 
+// 요약 단계는 groupMap 준비 여부를 확인한 뒤에만 렌더한다.
 const renderSummaryStep: StepRenderer = ({
   groupMap,
   groups,
@@ -79,6 +81,7 @@ const renderSummaryStep: StepRenderer = ({
 
 const renderCompletionStep: StepRenderer = () => <CompletionStep />;
 
+// step.type -> 렌더러 매핑으로 분기 추가/변경 지점을 한 곳으로 고정한다.
 const STEP_RENDERERS: Record<StepConfig["type"], StepRenderer> = {
   welcome: renderWelcomeStep,
   group: renderGroupStep,

@@ -9,6 +9,7 @@ import { styles } from "./styles";
 export function ProfileScreen() {
   const { data, isLoading, isError } = useProfile();
   const { mutateAsync: updateProfile } = useUpdateProfile();
+  // 화면은 폼 상태/저장 정책을 훅에서 받아 바인딩만 수행한다.
   const {
     formState,
     isSaveDisabled,

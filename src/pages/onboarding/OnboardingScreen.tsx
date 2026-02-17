@@ -1,5 +1,5 @@
 import React from "react";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { Typography } from "@src/components";
 import { useOnboardingStatus } from "@features/onboarding/model";
@@ -48,6 +48,16 @@ export function OnboardingScreen() {
   const footerSafeAreaStyle = {
     paddingBottom: Math.max(safeAreaInsets.bottom, 12),
   };
+  const stepContent = renderOnboardingStep({
+    activeStep,
+    activeGroup,
+    groupMap,
+    groups,
+    formState,
+    handleSelectSingle,
+    handleSetMulti,
+    handleToggleMulti,
+  });
 
   return (
     <SafeAreaView
@@ -74,17 +84,17 @@ export function OnboardingScreen() {
             <Typography variant="bodyMd" tone="secondary">
               옵션을 불러오지 못했습니다.
             </Typography>
+          ) : activeStep.type === "summary" ? (
+            // 요약 단계는 수정 패널이 길어질 수 있어 스크롤을 허용한다.
+            <ScrollView
+              style={styles.summaryScroll}
+              contentContainerStyle={styles.summaryScrollContent}
+              showsVerticalScrollIndicator={false}
+            >
+              {stepContent}
+            </ScrollView>
           ) : (
-            renderOnboardingStep({
-              activeStep,
-              activeGroup,
-              groupMap,
-              groups,
-              formState,
-              handleSelectSingle,
-              handleSetMulti,
-              handleToggleMulti,
-            })
+            stepContent
           )}
         </View>
 

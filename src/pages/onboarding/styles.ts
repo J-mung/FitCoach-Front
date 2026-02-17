@@ -12,6 +12,8 @@ export const styles = {
   title: tailwind(tokens.spacing.titleGap),
   step: tailwind(tokens.spacing.sectionGap),
   body: tailwind(tokens.layout.full),
+  summaryScroll: tailwind(tokens.layout.full),
+  summaryScrollContent: tailwind("pb-16"),
   contentGap: tailwind(tokens.spacing.contentGap),
   // 선택지 레이아웃(줄바꿈 허용).
   choiceWrap: tailwind(`${tokens.layout.rowCenter} flex-wrap ${tokens.spacing.choiceTop}`),

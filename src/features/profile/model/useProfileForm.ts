@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { buildUpdateProfileDTO, mapProfileDtoToFormState } from "./mappers";
 import type { ProfileFormState, UseProfileFormParams, UseProfileFormResult } from "./types";
 
+// 저장 상태별 UI 표현 정책을 단일 맵으로 관리한다.
 const STATUS_VIEW_MAP = {
   idle: {
     visible: false,
@@ -37,6 +38,7 @@ export function useProfileForm({
 }: UseProfileFormParams): UseProfileFormResult {
   const [formState, setFormState] = useState<ProfileFormState>(INITIAL_FORM_STATE);
   const [saveStatus, setSaveStatus] = useState<UseProfileFormResult["saveStatus"]>("idle");
+  // 저장 중이거나 사용자 식별값이 없으면 저장 버튼을 비활성화한다.
   const isSaveDisabled = saveStatus === "saving" || !profile?.userId;
 
   useEffect(() => {
@@ -49,6 +51,7 @@ export function useProfileForm({
 
   const setHeightCm = (value: string) => {
     setFormState((prev) => ({ ...prev, heightCm: value }));
+    // 입력 변경 시 이전 성공/실패 메시지를 초기 상태로 되돌린다.
     if (saveStatus !== "saving") {
       setSaveStatus("idle");
     }
@@ -56,6 +59,7 @@ export function useProfileForm({
 
   const setWeightKg = (value: string) => {
     setFormState((prev) => ({ ...prev, weightKg: value }));
+    // 입력 변경 시 이전 성공/실패 메시지를 초기 상태로 되돌린다.
     if (saveStatus !== "saving") {
       setSaveStatus("idle");
     }
@@ -63,6 +67,7 @@ export function useProfileForm({
 
   const setTrainingYears = (value: string) => {
     setFormState((prev) => ({ ...prev, trainingYears: value }));
+    // 입력 변경 시 이전 성공/실패 메시지를 초기 상태로 되돌린다.
     if (saveStatus !== "saving") {
       setSaveStatus("idle");
     }
@@ -76,6 +81,7 @@ export function useProfileForm({
 
     setSaveStatus("saving");
     try {
+      // 저장 payload는 DTO mapper를 통해 일관된 형태로 생성한다.
       const payload = buildUpdateProfileDTO({
         userId: profile.userId,
         formState,
