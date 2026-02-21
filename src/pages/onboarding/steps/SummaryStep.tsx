@@ -12,8 +12,16 @@ type SummaryStepProps = {
   onSetMulti: (key: keyof GroupMap, ids: string[]) => void;
 };
 
-const SUMMARY_GROUP_KEYS = ["goal", "level", "location", "equipment"] as const;
+const SUMMARY_GROUP_KEYS = [
+  "goal",
+  "level",
+  "workouts_per_week",
+  "session_minutes",
+  "location",
+  "equipment",
+] as const;
 const SCHEDULE_GROUP_KEY = "workouts_per_week" as const;
+const SESSION_MINUTES_GROUP_KEY = "session_minutes" as const;
 
 // 최종 요약 단계: 주간 빈도 선택 + 선택 결과 요약/수정.
 export function SummaryStep({
@@ -26,6 +34,7 @@ export function SummaryStep({
   const [pendingMultiMap, setPendingMultiMap] = useState<Record<string, string[]>>({});
 
   const scheduleGroup = groupMap[SCHEDULE_GROUP_KEY];
+  const sessionMinutesGroup = groupMap[SESSION_MINUTES_GROUP_KEY];
   const summaryGroups = useMemo(
     () =>
       SUMMARY_GROUP_KEYS.map((key) => groupMap[key]).filter(
@@ -137,6 +146,38 @@ export function SummaryStep({
                   key={item.id}
                   style={[styles.optionCard, isSelected ? styles.optionCardSelected : null]}
                   onPress={() => onSelectSingle(scheduleGroup.key, item.id)}
+                >
+                  <Typography
+                    variant="titleMd"
+                    style={isSelected ? styles.optionTitleSelected : styles.optionTitle}
+                  >
+                    {item.label}
+                  </Typography>
+                  <View style={[styles.radioOuter, isSelected ? styles.radioOuterSelected : null]}>
+                    {isSelected ? <View style={styles.radioInner} /> : null}
+                  </View>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
+      ) : null}
+
+      {sessionMinutesGroup ? (
+        <View style={styles.summaryScheduleSection}>
+          <Typography variant="titleLg">한 번에 얼마나 운동할까요?</Typography>
+          <View style={styles.optionList}>
+            {sessionMinutesGroup.items.map((item) => {
+              const selectedId =
+                typeof formState[sessionMinutesGroup.key] === "string"
+                  ? (formState[sessionMinutesGroup.key] as string)
+                  : null;
+              const isSelected = selectedId === item.id;
+              return (
+                <Pressable
+                  key={item.id}
+                  style={[styles.optionCard, isSelected ? styles.optionCardSelected : null]}
+                  onPress={() => onSelectSingle(sessionMinutesGroup.key, item.id)}
                 >
                   <Typography
                     variant="titleMd"

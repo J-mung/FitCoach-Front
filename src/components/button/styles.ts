@@ -3,7 +3,7 @@ import { tokens } from "@shared/styles/index";
 
 // 버튼 스타일: 공통/사이즈/톤을 분리한다.
 export const styles = {
-  base: tailwind(`${tokens.layout.center} ${tokens.radius.md}`),
+  base: tailwind(`${tokens.layout.center} ${tokens.radius.md} min-h-11`),
   sizes: {
     md: tailwind(tokens.spacing.buttonPaddingMd),
     lg: tailwind(tokens.spacing.buttonPaddingLg),

@@ -26,6 +26,8 @@ export function Button({
   style,
   hitSlop,
   accessibilityRole,
+  accessibilityLabel,
+  accessibilityHint,
   ...props
 }: ButtonProps) {
   // 로딩 중에는 비활성으로 처리하고 스피너를 표시한다.
@@ -33,6 +35,9 @@ export function Button({
   const spinnerColor = variant === "primary" ? primarySpinnerColor : secondarySpinnerColor;
   const resolvedHitSlop = hitSlop ?? { top: 6, bottom: 6, left: 10, right: 10 };
   const resolvedAccessibilityRole = accessibilityRole ?? "button";
+  const resolvedAccessibilityLabel = accessibilityLabel ?? title;
+  const resolvedAccessibilityHint =
+    accessibilityHint ?? (loading ? "처리 중입니다. 잠시만 기다려주세요." : undefined);
   // Pressable 스타일은 상태 기반 style 함수도 지원한다.
   const resolveStyle = (state: PressableStateCallbackType) => {
     const resolvedStyle = typeof style === "function" ? style(state) : style;
@@ -52,6 +57,9 @@ export function Button({
       disabled={isDisabled}
       hitSlop={resolvedHitSlop}
       accessibilityRole={resolvedAccessibilityRole}
+      accessibilityLabel={resolvedAccessibilityLabel}
+      accessibilityHint={resolvedAccessibilityHint}
+      accessibilityState={{ disabled: isDisabled, busy: loading }}
       {...props}
     >
       {loading ? (

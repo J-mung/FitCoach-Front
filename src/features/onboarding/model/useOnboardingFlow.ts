@@ -4,7 +4,7 @@ import type { GroupMap, OnboardingFormState } from "./types";
 import {
   buildStepFlow,
   DEFAULT_GROUP_KEYS,
-  SUMMARY_PRIMARY_GROUP_KEY,
+  SUMMARY_REQUIRED_GROUP_KEYS,
   TOTAL_STEPS,
 } from "./constants";
 import {
@@ -52,7 +52,7 @@ export function useOnboardingFlow({
   const canProceedSummary =
     activeStep.type !== "summary"
       ? true
-      : typeof formState[SUMMARY_PRIMARY_GROUP_KEY] === "string";
+      : SUMMARY_REQUIRED_GROUP_KEYS.every((key) => typeof formState[key] === "string");
   // 로딩/에러 상태에서는 진행 버튼을 비활성화한다.
   const isCtaDisabled = isLoading || isError || !canProceed || !canProceedSummary;
 

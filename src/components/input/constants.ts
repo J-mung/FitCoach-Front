@@ -7,7 +7,10 @@ export const inputBaseStyle = styles.containerBase;
 
 export const inputVariantStyleMap: Record<InputVariant, ViewStyle> = {
   default: styles.border.default,
+  focused: styles.border.focused,
   error: styles.border.error,
+  disabled: styles.border.disabled,
+  filled: styles.border.filled,
 };
 
 export const inputLabelStyle: TextStyle = styles.label;

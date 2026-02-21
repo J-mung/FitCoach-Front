@@ -8,9 +8,11 @@ export const chipBaseStyle = styles.base;
 export const chipVariantStyleMap: Record<ChipVariant, ViewStyle> = {
   default: styles.variants.default,
   selected: styles.variants.selected,
+  disabled: styles.variants.disabled,
 };
 
 export const chipTextStyleMap: Record<ChipVariant, TextStyle> = {
   default: styles.text.default,
   selected: styles.text.selected,
+  disabled: styles.text.disabled,
 };

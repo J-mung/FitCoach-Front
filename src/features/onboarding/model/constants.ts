@@ -5,7 +5,10 @@ export const TOTAL_STEPS = 6;
 
 // 온보딩 기본 단계 키(데이터가 없을 때 사용).
 export const DEFAULT_GROUP_KEYS = ["goal", "level", "equipment"];
-export const SUMMARY_PRIMARY_GROUP_KEY = "workouts_per_week";
+export const SUMMARY_REQUIRED_GROUP_KEYS = [
+  "workouts_per_week",
+  "session_minutes",
+] as const;
 const FLOW_GROUP_KEYS = ["goal", "level", "equipment"] as const;
 
 // 단계 정의를 키 목록으로 구성한다.

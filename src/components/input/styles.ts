@@ -8,8 +8,14 @@ export const styles = {
   ),
   border: {
     default: tailwind(tokens.color.border),
+    focused: tailwind(tokens.color.borderPrimary),
     error: tailwind(tokens.color.borderPrimary),
+    disabled: tailwind(tokens.color.border),
+    filled: tailwind(tokens.color.border),
   },
+  inputText: tailwind(tokens.color.textPrimary),
+  inputTextDisabled: tailwind(tokens.color.textDisabled),
+  disabledBackground: tailwind("bg-slate-100"),
   label: tailwind(
     `${tokens.typography.fontBase} ${tokens.typography.bodySm} ${tokens.color.textSecondary} ${tokens.spacing.inputLabelBottom}`
   ),
